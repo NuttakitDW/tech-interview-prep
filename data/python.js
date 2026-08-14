@@ -100,23 +100,43 @@ collect('a')         # => ['a']
 collect('b')         # => ['b']              a fresh list per call`
             }
           },
-          { p: 'Which types can be mutated at all: <code>list</code>, <code>dict</code>, <code>set</code> and most class instances can; <code>int</code>, <code>str</code>, <code>tuple</code> and <code>frozenset</code> cannot. And immutability is shallow — a tuple freezes <em>which</em> objects sit in its slots, not what those objects contain.' },
+          { p: 'Some types can change after you create them. Some cannot.' },
+          {
+            list: [
+              '<b>Can change</b> — the word for this is <em>mutable</em>: <code>list</code>, <code>dict</code>, <code>set</code>, and most classes you write yourself.',
+              '<b>Cannot change</b> — the word is <em>immutable</em>: <code>int</code>, <code>str</code>, <code>tuple</code>, <code>frozenset</code>.'
+            ]
+          },
+          { p: 'But "cannot change" means less than most people expect. A tuple does not hold objects. It holds labels that point at objects — the same labels as before. Immutable means you cannot move those labels. It does not mean the objects at the far end are frozen.' },
+          {
+            caption: 'A tuple locks its labels, not what they point at',
+            diagram: `t = ([], 'x')
+
+  t ──▶ position 0 ──▶ []          this list can still grow
+        position 1 ──▶ 'x'
+        ▲
+        └── locked: you cannot point a position
+            at some different object`
+          },
           {
             code: {
               lang: 'python',
-              src: `t = ([], 'x')
-t[0] = [1]           # TypeError: 'tuple' object does not support item assignment
-t[0].append(1)       # fine: the list in slot 0 is still a mutable list
-t                    # => ([1], 'x')`
+              src: `t = ([], 'x')        # a tuple holding a list and a string
+
+t[0] = [1]           # ERROR — you cannot point position 0 somewhere else
+                     # TypeError: 'tuple' object does not support item assignment
+
+t[0].append(1)       # OK — the list at the end of that label still accepts changes
+t                    # => ([1], 'x')     the tuple never changed; the list did`
             }
           }
         ],
         say:
-          'A name is a label bound to an object, so assignment rebinds a label and never copies. Mutating changes the shared object and every label sees it; rebinding moves one label only. That one distinction explains aliasing bugs, mutable default arguments, and why a shallow copy is not enough.',
+          'A name is a label bound to an object, so assignment rebinds a label and never copies. Mutating changes the shared object and every label sees it; rebinding moves one label only. That one distinction explains aliasing bugs, mutable default arguments, and why copying a container does not copy what is inside it.',
         traps: [
           'Using a mutable default argument — it is created once, at definition time, and shared by every call.',
           'Reaching for <code>is</code> to compare values. It appears to work only by accident, via small-int and string interning.',
-          'Assuming <code>copy.copy()</code> is deep — the nested objects stay shared. Use <code>copy.deepcopy()</code> when you mean it.'
+          'Assuming <code>copy.copy()</code> copies everything. It copies the outer container only, and the objects inside stay shared. <code>copy.deepcopy()</code> copies all the way down.'
         ]
       },
       {
