@@ -1,0 +1,190 @@
+/* ============================================================
+   theme.css — ground, tokens, typography, atmosphere
+   Aesthetic: phosphor lab notebook. Near-black ground, etched
+   grid, editorial serif headings against monospace telemetry.
+   ============================================================ */
+
+:root {
+  /* ground */
+  --ink:      #050706;
+  --ink-2:    #0B0F0C;
+  --ink-3:    #121814;
+  --ink-4:    #18201A;
+  --edge:     #1F2A22;
+  --edge-lit: #2E4034;
+
+  /* signal */
+  --signal:   #00D95F;
+  --signal-d: #00A548;
+  --moss:     #0A3D22;
+  --amber:    #E0B341;
+  --rust:     #D9542B;
+
+  /* type */
+  --pale:     #E8F2EA;
+  --pale-2:   #B9C7BD;
+  --ash:      #6B7A70;
+  --ash-2:    #4C5951;
+
+  /* families */
+  --serif: "Instrument Serif", "Iowan Old Style", Georgia, serif;
+  --sans:  "Familjen Grotesk", "Avenir Next", "Segoe UI", sans-serif;
+  --mono:  "IBM Plex Mono", "SF Mono", Menlo, monospace;
+
+  /* metrics */
+  --rail: 268px;
+  --gut: clamp(1.25rem, 4vw, 3rem);
+  --r: 3px;
+  --ease: cubic-bezier(0.22, 0.71, 0.28, 0.99);
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--ink);
+  color: var(--pale-2);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* --- atmosphere: grid etch + corner glows + grain ------------- */
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(900px 520px at 12% -8%, rgba(0, 217, 95, 0.10), transparent 62%),
+    radial-gradient(760px 620px at 104% 8%, rgba(10, 61, 34, 0.42), transparent 60%),
+    radial-gradient(1000px 700px at 50% 118%, rgba(0, 217, 95, 0.05), transparent 65%),
+    linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.55) 100%);
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.5;
+  background-image:
+    linear-gradient(rgba(46, 64, 52, 0.16) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(46, 64, 52, 0.16) 1px, transparent 1px);
+  background-size: 68px 68px;
+  mask-image: radial-gradient(120% 90% at 50% 0%, #000 8%, transparent 74%);
+  -webkit-mask-image: radial-gradient(120% 90% at 50% 0%, #000 8%, transparent 74%);
+}
+
+/* --- typography ---------------------------------------------- */
+
+h1, h2, h3, h4 {
+  font-family: var(--serif);
+  font-weight: 400;
+  color: var(--pale);
+  letter-spacing: -0.01em;
+  line-height: 1.08;
+  margin: 0;
+}
+
+h1 { font-size: clamp(2.6rem, 6vw, 4.4rem); text-wrap: balance; }
+h2 { font-size: clamp(1.9rem, 3.6vw, 2.75rem); }
+h3 { font-size: clamp(1.3rem, 2.2vw, 1.6rem); }
+
+em { font-style: italic; color: var(--signal); }
+
+p { margin: 0 0 1rem; }
+
+a { color: var(--signal); text-decoration-color: rgba(0, 217, 95, 0.35); }
+
+code, kbd, .mono, .num {
+  font-family: var(--mono);
+  font-variant-ligatures: none;
+}
+
+/* inline code */
+:not(pre) > code {
+  font-size: 0.87em;
+  color: var(--signal);
+  background: rgba(0, 217, 95, 0.07);
+  border: 1px solid rgba(0, 217, 95, 0.16);
+  border-radius: var(--r);
+  padding: 0.08em 0.36em;
+  white-space: nowrap;
+}
+
+/* micro label — the recurring mono eyebrow */
+.lbl {
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ash);
+}
+
+.rule {
+  height: 1px;
+  border: 0;
+  background: linear-gradient(90deg, var(--edge-lit), transparent 72%);
+  margin: 0;
+}
+
+/* --- focus + selection --------------------------------------- */
+
+:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: var(--moss);
+  color: var(--pale);
+}
+
+/* --- scrollbars ---------------------------------------------- */
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--edge-lit) transparent;
+}
+
+*::-webkit-scrollbar { width: 9px; height: 9px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb {
+  background: var(--edge-lit);
+  border-radius: 99px;
+}
+*::-webkit-scrollbar-thumb:hover { background: var(--moss); }
+
+/* --- entrance motion ----------------------------------------- */
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes glow {
+  0%, 100% { opacity: 0.55; }
+  50%      { opacity: 1; }
+}
+
+.rise {
+  opacity: 0;
+  animation: rise 0.66s var(--ease) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+  .rise { opacity: 1; }
+}
