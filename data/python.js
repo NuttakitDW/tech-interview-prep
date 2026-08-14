@@ -11,39 +11,112 @@
       {
         id: 'py-names',
         title: 'Names, objects, and mutation',
-        tags: ['fundamentals'],
-        ask: 'What does assignment actually do in Python?',
+        tags: ['fundamentals', 'hot'],
+        ask: 'What does b = a actually do?',
         body: [
-          { p: 'Python has no variables in the C sense. A name is a label bound to an object. Assignment rebinds the label; it never copies. So <code>b = a</code> gives two names for one object, and mutating through either is visible through both.' },
-          { p: 'Every object has an identity (<code>id()</code>), a type, and a value. <code>is</code> compares identity, <code>==</code> compares value. Mutable objects (list, dict, set, most class instances) can change in place; immutable ones (int, str, tuple, frozenset) cannot.' },
+          { p: 'A name in Python is a label, not a box. <code>a = [1, 2]</code> builds <em>one</em> list object and points the label <code>a</code> at it. <code>b = a</code> pins a second label on that same object. Nothing is copied.' },
+          {
+            caption: 'One object, two labels',
+            diagram: `a = [1, 2]      a ──▶ [1, 2]
+
+b = a           a ──┐
+                    ├──▶ [1, 2]        one object, two labels
+                b ──┘
+
+b.append(3)     a ──┐
+                    ├──▶ [1, 2, 3]     MUTATE: the object changed,
+                b ──┘                  so both labels see it
+
+b = [9]         a ─────▶ [1, 2, 3]     REBIND: only the label b
+                b ─────▶ [9]           moved. a is untouched.`
+          },
+          { p: 'So there are two different operations, and this whole topic is telling them apart. <b>Mutating</b> reaches through a label and changes the shared object. <b>Rebinding</b> points one label somewhere else and leaves the object alone.' },
           {
             code: {
               lang: 'python',
               src: `a = [1, 2]
-b = a
-b.append(3)
-print(a)          # [1, 2, 3] — same object
+b = a                # a second label on the same object
+b.append(3)          # mutate through b
 
-def add(item, bucket=[]):   # BUG: default evaluated once, at def time
+a                    # => [1, 2, 3]   a changed, though we never named it
+a is b               # => True        one object, one identity
+
+b = [9]              # rebind b
+a                    # => [1, 2, 3]   untouched
+b                    # => [9]
+a is b               # => False       two objects now`
+            }
+          },
+          { p: '<code>is</code> asks "the same object?". <code>==</code> asks "the same value?". Two separate lists that happen to hold equal contents are <code>==</code> but never <code>is</code>.' },
+          {
+            code: {
+              lang: 'python',
+              src: `x = [1, 2]
+y = [1, 2]           # a separate list that merely looks the same
+
+x == y               # => True    equal contents
+x is y               # => False   different objects`
+            }
+          },
+          { p: 'The same split decides whether a function can change its caller’s data. Passing an argument binds a <em>new local label</em> to the caller’s object.' },
+          {
+            code: {
+              lang: 'python',
+              src: `def rename(bucket):
+    bucket = ['new']         # rebinds the local label only
+
+def fill(bucket):
+    bucket.append('new')     # mutates the caller's object
+
+items = ['old']
+rename(items)
+items                # => ['old']           caller unaffected
+fill(items)
+items                # => ['old', 'new']    caller changed`
+            }
+          },
+          { p: 'That is what makes the most-asked Python bug possible. A default argument is evaluated <b>once</b>, while the <code>def</code> statement runs — not on each call. So a mutable default is a single object shared by every call, for the life of the process.' },
+          {
+            code: {
+              lang: 'python',
+              src: `def collect(item, bucket=[]):    # this list is built ONCE, right here
     bucket.append(item)
     return bucket
 
-add(1); add(2)    # [1, 2] — the same list, forever
-
-def add(item, bucket=None): # fix: sentinel
-    bucket = [] if bucket is None else bucket
-    bucket.append(item)
-    return bucket`
+collect('a')         # => ['a']
+collect('b')         # => ['a', 'b']         the same list, still filling
+collect('c')         # => ['a', 'b', 'c']`
             }
           },
-          { p: 'A tuple being immutable means its <em>references</em> cannot be swapped — the objects inside can still mutate. <code>t = ([],); t[0].append(1)</code> works.' }
+          {
+            code: {
+              lang: 'python',
+              src: `def collect(item, bucket=None):  # None is immutable, so it is safe to share
+    bucket = [] if bucket is None else bucket
+    bucket.append(item)
+    return bucket
+
+collect('a')         # => ['a']
+collect('b')         # => ['b']              a fresh list per call`
+            }
+          },
+          { p: 'Which types can be mutated at all: <code>list</code>, <code>dict</code>, <code>set</code> and most class instances can; <code>int</code>, <code>str</code>, <code>tuple</code> and <code>frozenset</code> cannot. And immutability is shallow — a tuple freezes <em>which</em> objects sit in its slots, not what those objects contain.' },
+          {
+            code: {
+              lang: 'python',
+              src: `t = ([], 'x')
+t[0] = [1]           # TypeError: 'tuple' object does not support item assignment
+t[0].append(1)       # fine: the list in slot 0 is still a mutable list
+t                    # => ([1], 'x')`
+            }
+          }
         ],
         say:
-          'Names are bindings to objects, not boxes holding values. Assignment rebinds; it never copies. That single fact explains mutable default arguments, aliasing bugs, and why shallow copies bite.',
+          'A name is a label bound to an object, so assignment rebinds a label and never copies. Mutating changes the shared object and every label sees it; rebinding moves one label only. That one distinction explains aliasing bugs, mutable default arguments, and why a shallow copy is not enough.',
         traps: [
-          'Using a mutable default argument — evaluated once at function definition.',
-          'Reaching for <code>is</code> to compare values. It only works for small ints and interned strings by accident.',
-          'Assuming <code>copy.copy()</code> is deep. Nested containers stay shared.'
+          'Using a mutable default argument — it is created once, at definition time, and shared by every call.',
+          'Reaching for <code>is</code> to compare values. It appears to work only by accident, via small-int and string interning.',
+          'Assuming <code>copy.copy()</code> is deep — the nested objects stay shared. Use <code>copy.deepcopy()</code> when you mean it.'
         ]
       },
       {

@@ -32,11 +32,19 @@
 
   var cache = {};
 
+  /* "# => [1, 2]" is a result the reader must see, not an aside.
+     Escaping has already run, so the arrow arrives as "=&gt;". */
+  var OUTPUT = /^(#|\/\/)\s*=(>|&gt;)/;
+
   P.highlight = function (src, lang) {
+    if (lang === 'text') return escapeHtml(src);
+
     var re = cache[lang] || (cache[lang] = build(lang));
     re.lastIndex = 0;
     return escapeHtml(src).replace(re, function (m, com, str, num, kw, fn) {
-      if (com) return '<span class="t-com">' + com + '</span>';
+      if (com) {
+        return '<span class="' + (OUTPUT.test(com) ? 't-out' : 't-com') + '">' + com + '</span>';
+      }
       if (str) return '<span class="t-str">' + str + '</span>';
       if (num) return '<span class="t-num">' + num + '</span>';
       if (kw) return '<span class="t-key">' + kw + '</span>';

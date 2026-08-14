@@ -17,6 +17,13 @@
       );
     }
 
+    if (block.diagram) {
+      return (
+        '<figure class="diagram"><span class="lbl">' + (block.caption || 'The model') + '</span>' +
+        '<pre>' + block.diagram.replace(/&/g, '&amp;').replace(/</g, '&lt;') + '</pre></figure>'
+      );
+    }
+
     if (block.code) {
       return (
         '<pre data-lang="' + block.code.lang + '"><code>' +

@@ -399,9 +399,34 @@ pre[data-lang]::after {
 /* token colors */
 .t-key { color: #7BE3A6; }
 .t-str { color: var(--amber); }
-.t-com { color: var(--ash-2); font-style: italic; }
+.t-com { color: #6F8579; font-style: italic; }
+.t-out { color: var(--pale-2); }        /* "# => result" — the point of the line */
 .t-fn  { color: #9FD8FF; }
 .t-num { color: #E58F65; }
+
+/* drawn model — boxes and arrows, never syntax-coloured */
+.diagram {
+  margin: 0 0 1rem;
+  padding: 0.85rem 1.1rem 1rem;
+  border: 1px solid var(--edge);
+  border-left: 2px solid var(--signal-d);
+  border-radius: 0 var(--r) var(--r) 0;
+  background: rgba(10, 61, 34, 0.14);
+  overflow-x: auto;
+}
+
+.diagram .lbl { display: block; margin-bottom: 0.7rem; color: var(--signal-d); }
+
+.diagram pre {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--pale-2);
+  font-size: 0.78rem;
+  line-height: 1.55;
+  overflow: visible;
+}
 
 /* note / warn callouts */
 .note {
