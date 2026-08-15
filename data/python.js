@@ -150,8 +150,8 @@ t                    # => ([1], 'x')     the tuple never changed; the list did`
             list: [
               '<code>list</code> — dynamic array. Index and append amortised <code>O(1)</code>; <code>insert(0, x)</code> and <code>pop(0)</code> are <code>O(n)</code>; membership is <code>O(n)</code>.',
               '<code>dict</code> / <code>set</code> — hash table. Lookup, insert, delete average <code>O(1)</code>. Keys must be hashable, meaning immutable in practice.',
-              '<code>collections.deque</code> — doubly linked blocks. <code>O(1)</code> push and pop at both ends. This is your queue.',
-              '<code>tuple</code> — immutable, hashable, lighter than a list. Use as a dict key or a fixed record.',
+              '<code>collections.deque</code> — doubly linked blocks. Push and pop at either end are <code>O(1)</code>, but reaching an item in the middle is <code>O(n)</code>. This is your queue, not your array.',
+              '<code>tuple</code> — a fixed-size array. Reading costs the same as a list: index <code>O(1)</code>, membership <code>O(n)</code>. Nothing can be added or removed, and that is what makes it hashable — so it works as a dict key, where hashing costs <code>O(k)</code> in the number of items. It also uses a little less memory, because a list over-allocates spare room to grow.',
               '<code>heapq</code> on a list — <code>O(log n)</code> push/pop, <code>O(1)</code> peek at the min. Top-K problems.'
             ]
           },
