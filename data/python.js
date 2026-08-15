@@ -145,7 +145,43 @@ t                    # => ([1], 'x')     the tuple never changed; the list did`
         tags: ['complexity'],
         ask: 'Which container, and what does it cost?',
         body: [
-          { p: 'Interviewers want the costs straight away, with one sentence on why. Open a container below to see how it is laid out and what it is for.' },
+          { p: 'This section teaches one skill: <b>name the operation your code repeats most, then pick the container that makes that operation cheap.</b> That is the whole decision. Interviewers test it two ways — directly ("why a set here?") and indirectly, when your solution is slow and the fix is a different container.' },
+          { p: 'Every cost below is written in <b>O(&hellip;)</b> notation. It answers one question: <em>what happens when the data grows?</em>' },
+          {
+            list: [
+              '<code>O(1)</code> — same cost whether there are ten items or ten million. The size does not matter.',
+              '<code>O(n)</code> — cost grows with the size. Ten times the items, ten times the work.',
+              '<code>O(log n)</code> — grows, but barely. A million items still cost only about 20 steps.'
+            ]
+          },
+          { p: 'Here is the skill in action, on the case that comes up most. The task: filter 10,000 signups against 10,000 banned emails. Both versions are correct. One does 100 million steps, the other does 20,000.' },
+          {
+            code: {
+              lang: 'python',
+              src: `banned = load_banned()        # 10,000 emails in a list
+
+# SLOW - "in" on a list walks it item by item: up to 10,000 steps.
+# Repeated for every signup: 10,000 x 10,000 = 100,000,000 steps.
+ok = [s for s in signups if s.email not in banned]
+
+# FAST - build a set once. "in" on a set is one hash lookup: 1 step.
+# 10,000 to build the set + 10,000 checks = 20,000 steps.
+banned_set = set(banned)
+ok = [s for s in signups if s.email not in banned_set]`
+            }
+          },
+          { p: 'Nothing about the logic changed. The only decision was: <em>the operation this loop repeats is "is x in here?", and the container that makes that cheap is a set.</em> Every container below is that same decision — a repeated operation, and the container built to make it cheap. Say the job out loud and the container names itself:' },
+          {
+            list: [
+              '"Keep them in the order they arrived, and let me grab one by position." &mdash; <code>list</code>',
+              '"These few values belong together and never change." &mdash; <code>tuple</code>',
+              '"Find me the value that goes with this key." &mdash; <code>dict</code>',
+              '"Just tell me whether x is in here." &mdash; <code>set</code>',
+              '"Add at one end, take from the other." &mdash; <code>collections.deque</code>',
+              '"Keep handing me the smallest (or most urgent) one." &mdash; <code>heapq</code>'
+            ]
+          },
+          { p: 'The cards below are the detail behind that guide: how each container is laid out in memory, what it charges for each operation, and when to reach for it. Do not memorise them top to bottom — open the one you would have picked and check what it charges for your busiest operation.' },
           {
             structures: [
               {
