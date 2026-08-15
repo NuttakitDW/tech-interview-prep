@@ -10,6 +10,8 @@
     'py-structures': [
       { t: 'Time complexity (Python wiki)', u: 'https://wiki.python.org/moin/TimeComplexity' },
       { t: 'collections', u: 'https://docs.python.org/3/library/collections.html' },
+      { t: 'Dict order became official in 3.7', u: 'https://docs.python.org/3/whatsnew/3.7.html' },
+      { t: 'functools.lru_cache', u: 'https://docs.python.org/3/library/functools.html#functools.lru_cache' },
     ],
     'py-generators': [
       { t: 'Generators', u: 'https://docs.python.org/3/howto/functional.html#generators' },

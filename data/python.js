@@ -145,7 +145,7 @@ t                    # => ([1], 'x')     the tuple never changed; the list did`
         tags: ['complexity'],
         ask: 'Which container, and what does it cost?',
         body: [
-          { p: 'Interviewers want the complexity table without hesitation, plus one sentence on why.' },
+          { p: 'Interviewers want the costs straight away, with one sentence on why. Open a container below to see how it is laid out and what it is for.' },
           {
             structures: [
               {
@@ -160,13 +160,14 @@ t                    # => ([1], 'x')     the tuple never changed; the list did`
             │                       └─ append lands here      O(1)
             └─ insert(0) shifts everything right              O(n)
 
-  One contiguous block, so an index jumps straight to a slot  O(1)
+  One unbroken block of slots, so reaching position 3 is a
+  single jump, however long the list is                       O(1)
   but "x in list" has to walk it item by item                 O(n)
 
   Append is amortised O(1): now and then the block is full and
   everything is copied into a bigger one.`,
                 use: [
-                  'You have an order to keep and you index or slice it — rows from a query, parsed lines, a stack built from <code>append</code> and <code>pop</code>.',
+                  'You need to keep things in the order you put them, and reach one by its position or take a range — rows from a query, parsed lines, a stack built from <code>append</code> and <code>pop</code>.',
                   'The collection is small enough that walking it costs nothing.'
                 ],
                 not: ' you keep asking "is x in here?" (use a <code>set</code>) or you pop from the front (use a <code>deque</code>).'
@@ -179,7 +180,8 @@ t                    # => ([1], 'x')     the tuple never changed; the list did`
          │  a  │  b  │  c  │   fixed at creation, no spare room
          └─────┴─────┴─────┘
 
-  Reading is exactly like a list: index O(1), membership O(n).
+  Reading works exactly like a list: jumping to a position
+  costs O(1), and searching for a value costs O(n).
 
   Nothing can be added, removed, or re-pointed, and that is what
   makes the whole tuple hashable — so it can be a dict key.
@@ -227,11 +229,12 @@ t                    # => ([1], 'x')     the tuple never changed; the list did`
   'a' in some_set    hash, check one slot, done          O(1)
   'a' in some_list   walk every element                  O(n)
 
-  That difference is the single most valuable thing on this
-  card: a membership test inside a loop turns O(n·m) into O(n)
-  simply by building the set once, up front.`,
+  That difference is the single most valuable line on this card.
+  Checking a list inside a loop means walking it every time. Build
+  the set once, up front, and the whole loop drops from O(n·m)
+  to O(n).`,
                 use: [
-                  'Membership tests inside a loop — build the set once, then every check is effectively free.',
+                  'You keep asking "is this one in here?" inside a loop. Build the set once and every check after that is effectively free.',
                   'Removing duplicates when order does not matter.',
                   'Comparing two collections: <code>a &amp; b</code> shared, <code>a - b</code> missing, <code>a | b</code> combined.'
                 ],
@@ -284,7 +287,65 @@ t                    # => ([1], 'x')     the tuple never changed; the list did`
               }
             ]
           },
-          { p: 'Since 3.7 dicts preserve insertion order as a language guarantee. <code>collections.OrderedDict</code> now only earns its place for <code>move_to_end</code> and order-sensitive equality — an LRU cache, for instance.' },
+          { p: 'One more question interviewers like: <b>does a dict remember the order you added things in?</b> Yes. It has since Python 3.7 — and the promise is part of the language itself, so every Python must do it. In 3.6 it already happened, but only as an accident of how CPython was built, so you were told not to rely on it.' },
+          { p: 'That is why you rarely see <code>collections.OrderedDict</code> any more. Two differences are left. <b>First, comparing two of them:</b>' },
+          {
+            code: {
+              lang: 'python',
+              src: `a = {'x': 1, 'y': 2}
+b = {'y': 2, 'x': 1}     # same pairs, added in a different order
+a == b               # => True    a dict ignores order when comparing
+
+from collections import OrderedDict
+c = OrderedDict(x=1, y=2)
+d = OrderedDict(y=2, x=1)
+c == d               # => False   an OrderedDict compares the order too`
+            }
+          },
+          { p: '<b>Second, it can move a key to the end</b>, which a plain dict cannot do at all:' },
+          {
+            code: {
+              lang: 'python',
+              src: `o = OrderedDict(a=1, b=2, c=3)
+o.move_to_end('a')
+list(o)              # => ['b', 'c', 'a']    'a' is now last
+
+{'a': 1}.move_to_end('a')
+# AttributeError: 'dict' object has no attribute 'move_to_end'`
+            }
+          },
+          { p: 'That second one is worth knowing because of one classic interview question: build an <b>LRU cache</b>. LRU means <em>least recently used</em>. The cache holds a fixed number of items, and when it is full it throws away the item nobody has touched for the longest time.' },
+          { p: 'Keep the items in order of last use and the problem becomes easy. Every time an item is used, move it to the end. The untouched ones drift to the front, so the one to drop is always the first.' },
+          {
+            code: {
+              lang: 'python',
+              src: `cache, CAPACITY = OrderedDict(), 3
+
+def put(key, value):
+    cache[key] = value
+    cache.move_to_end(key)                # just used -> send to the back
+    if len(cache) > CAPACITY:
+        cache.popitem(last=False)         # full -> drop the front item
+
+def get(key):
+    if key not in cache:
+        return None
+    cache.move_to_end(key)                # reading counts as using it
+    return cache[key]
+
+put('a', 'A'); put('b', 'B'); put('c', 'C')
+get('a')             # touch 'a', so 'b' becomes the oldest
+put('d', 'D')        # now over capacity
+
+list(cache)          # => ['c', 'a', 'd']   'b' was evicted
+get('b')             # => None`
+            }
+          },
+          {
+            note: [
+              'For plain function caching you do not need to write this — <code>functools.lru_cache</code> is built in. Write it by hand when the interviewer asks, or when eviction needs its own rules.'
+            ]
+          },
           {
             code: {
               lang: 'python',
@@ -300,7 +361,7 @@ queue = deque(maxlen=100)           # ring buffer, drops the oldest`
           }
         ],
         say:
-          'List for ordered data I index, dict or set when I need membership or lookup by key, deque when I push and pop at both ends. The deciding question is which operation runs inside the hot loop.',
+          'I choose by the operation that runs most often. A list keeps things in the order I put them and lets me jump straight to position 3. A dict finds a value by its key, and a set answers "is this one in here?". A deque adds and removes at both ends. The deciding question is which of those runs inside the busiest loop.',
         traps: [
           'Repeated <code>x in some_list</code> inside a loop — that is <code>O(n·m)</code>. Build a set once.',
           'Using a list as a queue with <code>pop(0)</code>.',
