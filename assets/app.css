@@ -483,6 +483,45 @@ pre[data-lang]::after {
   font-family: var(--mono);
 }
 
+/* sources — every card cites where the claim can be checked */
+.src {
+  margin-top: 1rem;
+  padding-top: 0.85rem;
+  border-top: 1px dashed var(--edge);
+}
+
+.src .lbl { display: block; margin-bottom: 0.55rem; color: var(--ash); }
+
+.src ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem 0.5rem;
+}
+
+.src a {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.04em;
+  color: var(--ash);
+  text-decoration: none;
+  border: 1px solid var(--edge);
+  border-radius: 99px;
+  padding: 0.24rem 0.7rem;
+  transition: color 0.18s var(--ease), border-color 0.18s var(--ease), background 0.18s var(--ease);
+}
+
+.src a::after { content: " \2197"; color: var(--signal-d); }
+
+.src a:hover {
+  color: var(--signal);
+  border-color: var(--signal);
+  background: rgba(0, 217, 95, 0.06);
+}
+
 /* ============================================================
    QUIZ
    ============================================================ */

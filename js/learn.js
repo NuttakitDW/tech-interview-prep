@@ -48,6 +48,20 @@
         '</ul></div>'
       : '';
 
+    var refs = (P.refs && P.refs[concept.id]) || [];
+    var sources = refs.length
+      ? '<div class="src"><span class="lbl">Check it yourself</span><ul>' +
+        refs
+          .map(function (r) {
+            return (
+              '<li><a href="' + r.u + '" target="_blank" rel="noopener noreferrer">' +
+              r.t + '</a></li>'
+            );
+          })
+          .join('') +
+        '</ul></div>'
+      : '';
+
     return (
       '<article class="concept" id="' + concept.id + '">' +
       '<div class="concept__head">' +
@@ -59,6 +73,7 @@
       '<div class="concept__body">' + concept.body.map(renderBlock).join('') + '</div>' +
       '<div class="say"><span class="lbl">Say this out loud</span><p>' + concept.say + '</p></div>' +
       traps +
+      sources +
       '</article>'
     );
   }
