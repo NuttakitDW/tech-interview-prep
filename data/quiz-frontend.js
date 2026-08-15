@@ -268,9 +268,9 @@
     {
       id: 'f17', track: 'frontend', module: 'rn',
       q: 'Which thread computes flexbox layout in React Native?',
-      choices: ['The JS thread', 'The main/UI thread', 'The shadow thread, via Yoga', 'The GPU'],
+      choices: ['The JS thread', 'The main/UI thread', 'The background (shadow) thread, via Yoga', 'The GPU'],
       a: 2,
-      why: 'Yoga computes layout off the main thread on the shadow thread, then the resulting positions are applied to native views on the UI thread.'
+      why: 'Yoga computes layout in C++ on the background thread — the docs also call it the shadow thread — and the resulting positions are then applied to native views on the UI thread.'
     },
     {
       id: 'f18', track: 'frontend', module: 'rn',

@@ -359,7 +359,7 @@ async def fetch_all(urls):
 # heavy_cpu()  -> await asyncio.to_thread(heavy_cpu) or a process pool`
             }
           },
-          { p: 'Worth knowing for 2026: 3.13 shipped an experimental free-threaded build (PEP 703) that removes the GIL, and 3.12+ has per-interpreter GILs. Neither is the default yet, so answer for the standard build and mention these as direction of travel.' }
+          { p: 'Worth knowing for 2026: the free-threaded build that removes the GIL arrived in 3.13 (PEP 703) and became <b>officially supported</b> in 3.14 (PEP 779) — no longer experimental, though still not the default build, so you opt into it. Separately, 3.12 gave each subinterpreter its own GIL (PEP 684) and 3.14 exposed subinterpreters to Python code through <code>concurrent.interpreters</code> (PEP 734). Answer for the standard build, and mention these to show you are current.' }
         ],
         say:
           'Threads give concurrency, not CPU parallelism, because the GIL serialises bytecode. I/O-bound work goes to asyncio or a thread pool, CPU-bound work goes to processes, and anything slow inside a request goes to a task queue.',

@@ -164,7 +164,7 @@ Order.objects.aggregate(total=Sum('total'))    # whole-queryset, one dict`
           },
           {
             note: [
-              'annotate returns a QuerySet with an extra attribute per row; aggregate returns a single dictionary and ends the chain. Annotating across two multi-valued joins multiplies rows and inflates sums — use <code>distinct=True</code> or split into subqueries.'
+              'annotate returns a QuerySet with an extra attribute per row; aggregate returns a single dictionary and ends the chain. Annotating across two multi-valued joins multiplies the rows, so both results inflate — with two items and three tags on one order, each <code>Count</code> reports 6. <code>distinct=True</code> repairs a <code>Count</code>, but it does <b>not</b> repair a <code>Sum</code>: it adds up distinct <em>values</em>, so two items priced 5 total 5 instead of 10. For <code>Sum</code> and <code>Avg</code>, use a <code>Subquery</code> or annotate in separate queries.'
             ]
           }
         ],
@@ -277,7 +277,8 @@ class Order(models.Model):
 
     class Meta:
         constraints = [
-            models.CheckConstraint(check=Q(total__gte=0), name='total_non_neg'),
+            models.CheckConstraint(condition=Q(total__gte=0),      # 'check=' pre-5.1
+                                   name='total_non_neg'),
             models.UniqueConstraint(fields=['customer', 'idem_key'],
                                     name='uniq_idempotency'),
         ]

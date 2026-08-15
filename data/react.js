@@ -183,7 +183,7 @@ const Row = memo(function Row({ item, onSelect }) { ... });
 <Row item={item} style={{ padding: 8 }} onSelect={onSelect} />`
             }
           },
-          { p: '<code>memo</code> compares props shallowly. One inline object, array, or arrow function in the JSX and every render is a miss. Note that the React Compiler, stable since 19, applies this memoisation automatically — but interviews still expect you to explain the manual model.' }
+          { p: '<code>memo</code> compares props shallowly. One inline object, array, or arrow function in the JSX and every render is a miss. The React Compiler does this automatically — it reached 1.0 in October 2025, works with React 17 and up, and is opt-in as a build plugin rather than part of React itself. Interviews still expect you to explain the manual model.' }
         ],
         say:
           'Memoise when the work is genuinely expensive, or when a reference has to stay stable for a memoised child or a dependency array. Otherwise it costs more than it saves, and one inline object in the props defeats it anyway.',

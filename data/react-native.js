@@ -45,7 +45,7 @@
             list: [
               '<b>JS thread</b> — your React code, business logic, and by default every animation driven from JavaScript. One thread. Block it and nothing updates.',
               '<b>Main/UI thread</b> — native rendering, touch handling, native animation. Block it and the app is visibly frozen.',
-              '<b>Shadow thread</b> — Yoga computes flexbox layout off the main thread.'
+              '<b>Background thread</b> (the shadow thread) — Yoga computes layout in C++, off the main thread.'
             ]
           },
           { p: 'A slow render, a large <code>JSON.parse</code>, or a heavy filter runs on the JS thread. Native scrolling keeps moving because it lives on the UI thread, but anything React needs to draw stalls — which is why a list can scroll to a blank area.' },
@@ -152,7 +152,7 @@ const pan = Gesture.Pan()
           'useNativeDriver hands the animation to the UI thread so it survives a busy JS thread, but it only covers transform and opacity. Gesture-driven work goes to Reanimated worklets and Gesture Handler for the same reason.',
         traps: [
           'Animating height or margin and wondering why it stutters.',
-          'Setting <code>useNativeDriver: true</code> on an unsupported property and getting a runtime error.',
+          'Setting <code>useNativeDriver: true</code> on a layout property. The native driver supports non-layout properties only — the docs name <code>transform</code> and <code>opacity</code>.',
           'Driving animation from React state, re-rendering on every frame.'
         ]
       },
