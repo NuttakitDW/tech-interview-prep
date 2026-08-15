@@ -287,39 +287,59 @@ t                    # => ([1], 'x')     the tuple never changed; the list did`
               }
             ]
           },
-          { p: 'One more question interviewers like: <b>does a dict remember the order you added things in?</b> Yes. It has since Python 3.7 — and the promise is part of the language itself, so every Python must do it. In 3.6 it already happened, but only as an accident of how CPython was built, so you were told not to rely on it.' },
-          { p: 'That is why you rarely see <code>collections.OrderedDict</code> any more. It <em>is</em> a dict — <code>issubclass(OrderedDict, dict)</code> is <code>True</code>, so everything a dict does, it does — but with a doubly-linked list threaded through the items. That list costs memory: 408 bytes against 184 for the same three pairs. Two differences are left. <b>First, comparing two of them:</b>' },
+          { p: 'Three shortcuts from the same module are worth memorising, because they save you writing a loop under time pressure:' },
           {
             code: {
               lang: 'python',
-              src: `a = {'x': 1, 'y': 2}
-b = {'y': 2, 'x': 1}     # same pairs, added in a different order
-a == b               # => True    a dict ignores order when comparing
+              src: `from collections import defaultdict, Counter, deque
 
-from collections import OrderedDict
-c = OrderedDict(x=1, y=2)
-d = OrderedDict(y=2, x=1)
-c == d               # => False   an OrderedDict compares the order too`
+groups = defaultdict(list)          # no key checks
+for user in users:
+    groups[user.team].append(user)
+
+Counter(words).most_common(3)       # top-3 in one line
+queue = deque(maxlen=100)           # ring buffer, drops the oldest`
             }
           },
-          { p: '<b>Second, it can move a key to the end</b>, which a plain dict cannot do at all:' },
+          { p: 'One last container question that comes up a lot: <b>does a dict remember the order you added things in?</b> Yes, since Python 3.7, and the promise is part of the language, so every Python must do it. Before that it happened in CPython 3.6 only by accident, and you were told not to rely on it.' },
+          { p: 'That is why <code>collections.OrderedDict</code> is now rare. It <em>is</em> a dict — <code>issubclass(OrderedDict, dict)</code> is <code>True</code> — with a doubly-linked list threaded through it, which costs memory: 408 bytes against 184 for the same three pairs. What that list buys you is cheap removal from the front, which matters for exactly one classic exercise. That is the next concept.' },
+        ],
+        say:
+          'I choose by the operation that runs most often. A list keeps things in the order I put them and lets me jump straight to position 3. A dict finds a value by its key, and a set answers "is this one in here?". A deque adds and removes at both ends. The deciding question is which of those runs inside the busiest loop.',
+        traps: [
+          'Repeated <code>x in some_list</code> inside a loop — that is <code>O(n·m)</code>. Build a set once.',
+          'Using a list as a queue with <code>pop(0)</code>.',
+          'Trying to use a list as a dict key — unhashable because it is mutable.'
+        ]
+      },
+      {
+        id: 'py-lru',
+        title: 'Build an LRU cache',
+        tags: ['exercise', 'hot'],
+        ask: 'Build a cache that holds N items and drops the least recently used.',
+        body: [
+          { p: 'This one is asked by name, so it is worth having ready. <b>LRU</b> means <em>least recently used</em>. The cache holds a fixed number of items. When it is full and something new arrives, it throws away whichever item nobody has touched for the longest time.' },
+          { p: 'The whole trick is to keep the items in order of last use. Every time an item is used, move it to the back. The untouched ones drift to the front, so the one to throw away is always the first.' },
           {
-            code: {
-              lang: 'python',
-              src: `o = OrderedDict(a=1, b=2, c=3)
-o.move_to_end('a')
-list(o)              # => ['b', 'c', 'a']    'a' is now last
+            caption: 'Capacity 3',
+            diagram: `put a, b, c        front [ a  b  c ] back
+                          ▲              ▲
+                          oldest         newest
 
-{'a': 1}.move_to_end('a')
-# AttributeError: 'dict' object has no attribute 'move_to_end'`
-            }
+get('a')           front [ b  c  a ] back      'a' moves to the back
+
+put('d')           front [ b  c  a  d ] back   now 4 items, over capacity
+                          ▲
+                          drop this one
+
+result             front [ c  a  d ] back      'b' evicted`
           },
-          { p: 'That second one is worth knowing because of one classic interview question: build an <b>LRU cache</b>. LRU means <em>least recently used</em>. The cache holds a fixed number of items, and when it is full it throws away the item nobody has touched for the longest time.' },
-          { p: 'Keep the items in order of last use and the problem becomes easy. Every time an item is used, move it to the end. The untouched ones drift to the front, so the one to drop is always the first.' },
           {
             code: {
               lang: 'python',
-              src: `cache, CAPACITY = OrderedDict(), 3
+              src: `from collections import OrderedDict
+
+cache, CAPACITY = OrderedDict(), 3
 
 def put(key, value):
     cache[key] = value
@@ -341,11 +361,11 @@ list(cache)          # => ['c', 'a', 'd']   'b' was evicted
 get('b')             # => None`
             }
           },
-          { p: 'Which raises the obvious question: <b>a plain dict keeps order too, so why not use one?</b> Moving a key to the end is not the problem — <code>d[key] = d.pop(key)</code> does that, and costs about the same (34 ns against 27 ns). The problem is the other half of the job: finding the oldest key to throw away.' },
-          { p: 'With a plain dict you have to ask for the first key with <code>next(iter(d))</code>. Deleting a key does not close the gap it leaves behind, so after thousands of evictions the front of the dict is full of holes that iteration has to step over. It gets slower and slower.' },
+          { p: 'The follow-up question is <b>why not a plain dict</b>, since that keeps insertion order too. Moving a key to the back is not the problem — <code>d[key] = d.pop(key)</code> does it, at 34 ns against 27 ns. The problem is the other half of the job: finding the oldest key to remove.' },
+          { p: 'With a plain dict you ask for the first key with <code>next(iter(d))</code>. Deleting a key does not close the gap it leaves behind, so after thousands of evictions the front of the dict is full of holes that iteration has to step over. It degrades under exactly the pattern an LRU cache creates.' },
           {
             caption: 'Measured on CPython 3.14.7',
-            diagram: `Building a 50,000-item cache, then 70,000 evictions:
+            diagram: `A 50,000-item cache, then 70,000 evictions:
 
   plain dict    del d[next(iter(d))]         452 ms
   OrderedDict   popitem(last=False)           10 ms      ~43x faster
@@ -356,32 +376,18 @@ The same single call, before and after 40,000 evictions:
   dict after the churn           998 ns   ← stepping over dead slots
   OrderedDict after the churn     48 ns   ← follows one link, no scan`
           },
-          { p: 'That is the whole reason OrderedDict still exists: the linked list always knows which item is first, so eviction stays <code>O(1)</code> no matter how much churn there has been.' },
           {
             note: [
-              'For plain function caching you do not need to write any of this — <code>functools.lru_cache</code> is built in. Interestingly it does not use <code>OrderedDict</code> either: read <code>functools.py</code> and you will find it keeps its own <em>circular doubly linked list</em>. Same idea, hand-rolled for speed.'
+              'For caching a function you would not write any of this — <code>functools.lru_cache</code> is built in. It does not use <code>OrderedDict</code> either: read <code>functools.py</code> and you will find it keeps its own circular doubly linked list. Write it by hand when you are asked to, or when eviction needs its own rules.'
             ]
-          },
-          {
-            code: {
-              lang: 'python',
-              src: `from collections import defaultdict, Counter, deque
-
-groups = defaultdict(list)          # no key checks
-for user in users:
-    groups[user.team].append(user)
-
-Counter(words).most_common(3)       # top-3 in one line
-queue = deque(maxlen=100)           # ring buffer, drops the oldest`
-            }
           }
         ],
         say:
-          'I choose by the operation that runs most often. A list keeps things in the order I put them and lets me jump straight to position 3. A dict finds a value by its key, and a set answers "is this one in here?". A deque adds and removes at both ends. The deciding question is which of those runs inside the busiest loop.',
+          'Keep the items in order of last use: move an item to the back whenever it is read or written, and evict from the front when you are over capacity. OrderedDict gives me both in O(1) — move_to_end and popitem(last=False). A plain dict can move to the back just as cheaply, but finding the oldest key means scanning past deleted slots, which degrades badly under churn.',
         traps: [
-          'Repeated <code>x in some_list</code> inside a loop — that is <code>O(n·m)</code>. Build a set once.',
-          'Using a list as a queue with <code>pop(0)</code>.',
-          'Trying to use a list as a dict key — unhashable because it is mutable.'
+          'Forgetting that a <em>read</em> counts as a use. If <code>get</code> does not reorder, it is not an LRU cache.',
+          'Evicting before inserting, or checking capacity with <code>&gt;=</code> so the cache holds one item too few.',
+          'Reaching for <code>OrderedDict</code> and then not being able to say what it gives you over a plain dict.'
         ]
       },
       {
