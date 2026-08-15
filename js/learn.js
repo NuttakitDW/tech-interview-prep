@@ -2,6 +2,10 @@
 (function (P) {
   var pad = function (n) { return n < 10 ? '0' + n : String(n); };
 
+  function esc(t) {
+    return t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
   function renderBlock(block) {
     if (block.p) return '<p>' + block.p + '</p>';
 
@@ -20,7 +24,43 @@
     if (block.diagram) {
       return (
         '<figure class="diagram"><span class="lbl">' + (block.caption || 'The model') + '</span>' +
-        '<pre>' + block.diagram.replace(/&/g, '&amp;').replace(/</g, '&lt;') + '</pre></figure>'
+        '<pre>' + esc(block.diagram) + '</pre></figure>'
+      );
+    }
+
+    /* Collapsed-by-default panels: one container per row, each with a drawn
+       model and the cases it is actually for. Native <details> so keyboard
+       and screen readers work without any state of ours. */
+    if (block.structures) {
+      var panels = block.structures
+        .map(function (s) {
+          var costs = s.cost
+            .map(function (c) {
+              return '<span class="cost">' + c[0] + ' <b>' + c[1] + '</b></span>';
+            })
+            .join('');
+
+          var uses = s.use.map(function (u) { return '<li>' + u + '</li>'; }).join('');
+
+          return (
+            '<details class="ds__item"><summary>' +
+            '<code>' + s.name + '</code>' +
+            '<span class="ds__kind">' + s.kind + '</span>' +
+            '<span class="ds__costs">' + costs + '</span>' +
+            '</summary><div class="ds__body">' +
+            '<pre class="ds__viz">' + esc(s.diagram) + '</pre>' +
+            '<div class="ds__use"><span class="lbl">Reach for it when</span><ul>' + uses + '</ul></div>' +
+            '<p class="ds__not"><span class="lbl">Something else when</span>' + s.not + '</p>' +
+            '</div></details>'
+          );
+        })
+        .join('');
+
+      return (
+        '<div class="ds"><div class="ds__bar">' +
+        '<span class="lbl">' + block.structures.length + ' containers &mdash; open one to see how it is laid out</span>' +
+        '<button type="button" class="ds__all" data-act="ds-all">Open all</button>' +
+        '</div>' + panels + '</div>'
       );
     }
 
@@ -167,6 +207,21 @@
     root.modules.querySelectorAll('.module').forEach(function (el, i) {
       el.classList.add('rise');
       el.style.animationDelay = i * 70 + 'ms';
+    });
+
+    root.modules.querySelectorAll('.ds').forEach(function (group) {
+      var btn = group.querySelector('[data-act="ds-all"]');
+      btn.addEventListener('click', function () {
+        var items = group.querySelectorAll('details');
+        var opening = btn.textContent === 'Open all';
+        items.forEach(function (d) { d.open = opening; });
+        btn.textContent = opening ? 'Close all' : 'Open all';
+      });
+      group.addEventListener('toggle', function () {
+        var items = group.querySelectorAll('details');
+        var open = group.querySelectorAll('details[open]').length;
+        btn.textContent = open === items.length ? 'Close all' : 'Open all';
+      }, true);
     });
 
     spy(root);

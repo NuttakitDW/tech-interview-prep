@@ -147,12 +147,141 @@ t                    # => ([1], 'x')     the tuple never changed; the list did`
         body: [
           { p: 'Interviewers want the complexity table without hesitation, plus one sentence on why.' },
           {
-            list: [
-              '<code>list</code> — dynamic array. Index and append amortised <code>O(1)</code>; <code>insert(0, x)</code> and <code>pop(0)</code> are <code>O(n)</code>; membership is <code>O(n)</code>.',
-              '<code>dict</code> / <code>set</code> — hash table. Lookup, insert, delete average <code>O(1)</code>. Keys must be hashable, meaning immutable in practice.',
-              '<code>collections.deque</code> — doubly linked blocks. Push and pop at either end are <code>O(1)</code>, but reaching an item in the middle is <code>O(n)</code>. This is your queue, not your array.',
-              '<code>tuple</code> — a fixed-size array. Reading costs the same as a list: index <code>O(1)</code>, membership <code>O(n)</code>. Nothing can be added or removed, and that is what makes it hashable — so it works as a dict key, where hashing costs <code>O(k)</code> in the number of items. It also uses a little less memory, because a list over-allocates spare room to grow.',
-              '<code>heapq</code> on a list — <code>O(log n)</code> push/pop, <code>O(1)</code> peek at the min. Top-K problems.'
+            structures: [
+              {
+                name: 'list',
+                kind: 'dynamic array',
+                cost: [['index', 'O(1)'], ['append', 'O(1)'], ['insert(0)', 'O(n)'], ['x in', 'O(n)']],
+                diagram: `index       0     1     2     3
+         ┌─────┬─────┬─────┬─────┬─ ─ ─┬─ ─ ─┐
+         │  a  │  b  │  c  │  d  │     │     │  spare room
+         └─────┴─────┴─────┴─────┴─ ─ ─┴─ ─ ─┘
+            ▲                       ▲
+            │                       └─ append lands here      O(1)
+            └─ insert(0) shifts everything right              O(n)
+
+  One contiguous block, so an index jumps straight to a slot  O(1)
+  but "x in list" has to walk it item by item                 O(n)
+
+  Append is amortised O(1): now and then the block is full and
+  everything is copied into a bigger one.`,
+                use: [
+                  'You have an order to keep and you index or slice it — rows from a query, parsed lines, a stack built from <code>append</code> and <code>pop</code>.',
+                  'The collection is small enough that walking it costs nothing.'
+                ],
+                not: ' you keep asking "is x in here?" (use a <code>set</code>) or you pop from the front (use a <code>deque</code>).'
+              },
+              {
+                name: 'tuple',
+                kind: 'fixed-size array',
+                cost: [['index', 'O(1)'], ['x in', 'O(n)'], ['hash', 'O(k)']],
+                diagram: `         ┌─────┬─────┬─────┐
+         │  a  │  b  │  c  │   fixed at creation, no spare room
+         └─────┴─────┴─────┘
+
+  Reading is exactly like a list: index O(1), membership O(n).
+
+  Nothing can be added, removed, or re-pointed, and that is what
+  makes the whole tuple hashable — so it can be a dict key.
+  Hashing walks every item, so cost grows with length     O(k)`,
+                use: [
+                  'A fixed record whose shape never changes — <code>(lat, lng)</code>, an RGB colour, several values returned from one function.',
+                  'A dict key or set member built from more than one value — <code>counts[(user_id, date)]</code>.',
+                  'A constant you want nothing to append to by accident.'
+                ],
+                not: ' the collection grows or items get replaced. That is a list.'
+              },
+              {
+                name: 'dict',
+                kind: 'hash table',
+                cost: [['get / set', 'O(1)'], ['delete', 'O(1)'], ['key in', 'O(1)']],
+                diagram: `  d['sam']
+     │
+     │  hash('sam')  ──▶  slot 3
+     ▼
+  ┌──────┬──────┬──────┬───────────────┬──────┐
+  │      │      │      │ 'sam' ──▶ 42  │      │
+  └──────┴──────┴──────┴───────────────┴──────┘
+     0      1      2           3           4
+
+  The hash picks the slot directly, so the number of entries
+  does not change the cost                        O(1) average
+
+  Insertion order is recorded separately, and iteration follows
+  it — guaranteed by the language since Python 3.7.`,
+                use: [
+                  'Lookup by key — id to object, name to handler, parsed configuration.',
+                  'Grouping and counting, usually through <code>defaultdict</code> or <code>Counter</code>.',
+                  'Anything that arrived as JSON.'
+                ],
+                not: ' you only need "does this exist?" with no value attached. A set is smaller and states the intent.'
+              },
+              {
+                name: 'set',
+                kind: 'hash table, keys only',
+                cost: [['add', 'O(1)'], ['x in', 'O(1)'], ['a &amp; b', 'O(min(a,b))']],
+                diagram: `  ┌──────┬──────┬──────┬──────┬──────┐
+  │      │  b   │      │  a   │  c   │   keys only, no values
+  └──────┴──────┴──────┴──────┴──────┘
+
+  'a' in some_set    hash, check one slot, done          O(1)
+  'a' in some_list   walk every element                  O(n)
+
+  That difference is the single most valuable thing on this
+  card: a membership test inside a loop turns O(n·m) into O(n)
+  simply by building the set once, up front.`,
+                use: [
+                  'Membership tests inside a loop — build the set once, then every check is effectively free.',
+                  'Removing duplicates when order does not matter.',
+                  'Comparing two collections: <code>a &amp; b</code> shared, <code>a - b</code> missing, <code>a | b</code> combined.'
+                ],
+                not: ' order matters, duplicates matter, or the items are unhashable — a list cannot go into a set.'
+              },
+              {
+                name: 'collections.deque',
+                kind: 'doubly linked blocks',
+                cost: [['both ends', 'O(1)'], ['middle', 'O(n)']],
+                diagram: ` popleft ◀─┐                                ┌─▶ append
+            │                                │
+      ┌─────┴────┐    ┌──────────┐    ┌──────┴───┐
+      │ a  b  c  │◀──▶│ d  e  f  │◀──▶│ g  h     │
+      └──────────┘    └──────────┘    └──────────┘
+        block 1         block 2         block 3
+
+  Both ends are cheap, no shifting                        O(1)
+  but reaching 'e' walks block by block from an end       O(n)
+
+  This is your queue, not your array.`,
+                use: [
+                  'A FIFO queue — <code>append</code> at one end, <code>popleft</code> at the other.',
+                  'A sliding window moving over a stream.',
+                  'Keeping only the most recent N: <code>deque(maxlen=N)</code> drops the oldest for you.'
+                ],
+                not: ' you reach into the middle by index. That is a list.'
+              },
+              {
+                name: 'heapq',
+                kind: 'binary heap kept in a list',
+                cost: [['push / pop', 'O(log n)'], ['peek min', 'O(1)']],
+                diagram: `  the list:   [1, 3, 5, 7, 9, 8]
+
+  read as a tree:          1     ◀── h[0] is always the
+                         ┌─┴─┐       smallest item      O(1)
+                         3   5
+                       ┌─┴─┐ │
+                       7   9 8
+
+  push and pop repair one path between root and leaf  O(log n)
+
+  Only "parent ≤ child" holds. The list is NOT sorted — do not
+  read h[1] expecting the second smallest.`,
+                use: [
+                  'Top-K from a large stream without sorting the whole thing.',
+                  'A priority queue — a scheduler, Dijkstra, a worker taking the most urgent job first.',
+                  'Merging already-sorted sequences with <code>heapq.merge</code>.'
+                ],
+                not: ' you need everything in order. Call <code>sorted()</code>.'
+              }
             ]
           },
           { p: 'Since 3.7 dicts preserve insertion order as a language guarantee. <code>collections.OrderedDict</code> now only earns its place for <code>move_to_end</code> and order-sensitive equality — an LRU cache, for instance.' },

@@ -483,6 +483,155 @@ pre[data-lang]::after {
   font-family: var(--mono);
 }
 
+/* container accordion — collapsed by default so the card stays short */
+.ds { margin: 0 0 1rem; }
+
+.ds__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding-bottom: 0.6rem;
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid var(--edge);
+}
+
+.ds__all {
+  appearance: none;
+  background: transparent;
+  border: 1px solid var(--edge);
+  border-radius: 99px;
+  color: var(--ash);
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 0.26rem 0.75rem;
+  cursor: pointer;
+  transition: color 0.18s var(--ease), border-color 0.18s var(--ease);
+}
+
+.ds__all:hover { color: var(--signal); border-color: var(--signal); }
+
+.ds__item {
+  border: 1px solid var(--edge);
+  border-radius: var(--r);
+  background: var(--ink-2);
+  margin-bottom: 0.4rem;
+  overflow: hidden;
+}
+
+.ds__item[open] { border-color: var(--edge-lit); background: var(--ink); }
+
+.ds__item summary {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+  padding: 0.7rem 0.9rem;
+  cursor: pointer;
+  list-style: none;
+  transition: background 0.18s var(--ease);
+}
+
+.ds__item summary::-webkit-details-marker { display: none; }
+
+.ds__item summary::before {
+  content: "+";
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  color: var(--signal-d);
+  width: 0.9em;
+  flex-shrink: 0;
+}
+
+.ds__item[open] summary::before { content: "\2212"; color: var(--signal); }
+
+.ds__item summary:hover { background: var(--ink-3); }
+
+.ds__item summary > code {
+  font-size: 0.86rem;
+  white-space: nowrap;
+}
+
+.ds__kind {
+  font-size: 0.85rem;
+  color: var(--ash);
+}
+
+.ds__costs {
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+  margin-left: auto;
+}
+
+.cost {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.04em;
+  color: var(--ash);
+  border: 1px solid var(--edge);
+  border-radius: 2px;
+  padding: 0.1rem 0.4rem;
+  white-space: nowrap;
+}
+
+.cost b { color: var(--signal); font-weight: 400; }
+
+.ds__body {
+  padding: 0.3rem 0.9rem 1rem 2.5rem;
+  animation: rise 0.32s var(--ease) forwards;
+}
+
+.ds__viz {
+  margin: 0 0 0.9rem;
+  padding: 0.9rem 1rem;
+  background: #030503;
+  border: 1px solid var(--edge);
+  border-left: 2px solid var(--signal-d);
+  border-radius: 0 var(--r) var(--r) 0;
+  font-size: 0.72rem;
+  line-height: 1.5;
+  color: var(--pale-2);
+  overflow-x: auto;
+}
+
+.ds__use .lbl,
+.ds__not .lbl { display: block; margin-bottom: 0.4rem; color: var(--signal-d); }
+
+.ds__use ul { margin: 0 0 0.9rem; padding-left: 1.1rem; list-style: none; }
+
+.ds__use li {
+  position: relative;
+  font-size: 0.92rem;
+  margin-bottom: 0.3rem;
+}
+
+.ds__use li::before {
+  content: "";
+  position: absolute;
+  left: -1.05rem;
+  top: 0.62em;
+  width: 5px;
+  height: 1px;
+  background: var(--signal-d);
+}
+
+.ds__not {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--ash);
+}
+
+.ds__not .lbl { color: var(--rust); }
+
+@media (max-width: 640px) {
+  .ds__costs { margin-left: 0; width: 100%; }
+  .ds__body { padding-left: 1rem; }
+}
+
 /* sources — every card cites where the claim can be checked */
 .src {
   margin-top: 1rem;
