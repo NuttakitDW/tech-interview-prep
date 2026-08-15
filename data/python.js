@@ -288,7 +288,7 @@ t                    # => ([1], 'x')     the tuple never changed; the list did`
             ]
           },
           { p: 'One more question interviewers like: <b>does a dict remember the order you added things in?</b> Yes. It has since Python 3.7 — and the promise is part of the language itself, so every Python must do it. In 3.6 it already happened, but only as an accident of how CPython was built, so you were told not to rely on it.' },
-          { p: 'That is why you rarely see <code>collections.OrderedDict</code> any more. Two differences are left. <b>First, comparing two of them:</b>' },
+          { p: 'That is why you rarely see <code>collections.OrderedDict</code> any more. It <em>is</em> a dict — <code>issubclass(OrderedDict, dict)</code> is <code>True</code>, so everything a dict does, it does — but with a doubly-linked list threaded through the items. That list costs memory: 408 bytes against 184 for the same three pairs. Two differences are left. <b>First, comparing two of them:</b>' },
           {
             code: {
               lang: 'python',
@@ -341,9 +341,25 @@ list(cache)          # => ['c', 'a', 'd']   'b' was evicted
 get('b')             # => None`
             }
           },
+          { p: 'Which raises the obvious question: <b>a plain dict keeps order too, so why not use one?</b> Moving a key to the end is not the problem — <code>d[key] = d.pop(key)</code> does that, and costs about the same (34 ns against 27 ns). The problem is the other half of the job: finding the oldest key to throw away.' },
+          { p: 'With a plain dict you have to ask for the first key with <code>next(iter(d))</code>. Deleting a key does not close the gap it leaves behind, so after thousands of evictions the front of the dict is full of holes that iteration has to step over. It gets slower and slower.' },
+          {
+            caption: 'Measured on CPython 3.14.7',
+            diagram: `Building a 50,000-item cache, then 70,000 evictions:
+
+  plain dict    del d[next(iter(d))]         452 ms
+  OrderedDict   popitem(last=False)           10 ms      ~43x faster
+
+The same single call, before and after 40,000 evictions:
+
+  fresh dict                      39 ns
+  dict after the churn           998 ns   ← stepping over dead slots
+  OrderedDict after the churn     48 ns   ← follows one link, no scan`
+          },
+          { p: 'That is the whole reason OrderedDict still exists: the linked list always knows which item is first, so eviction stays <code>O(1)</code> no matter how much churn there has been.' },
           {
             note: [
-              'For plain function caching you do not need to write this — <code>functools.lru_cache</code> is built in. Write it by hand when the interviewer asks, or when eviction needs its own rules.'
+              'For plain function caching you do not need to write any of this — <code>functools.lru_cache</code> is built in. Interestingly it does not use <code>OrderedDict</code> either: read <code>functools.py</code> and you will find it keeps its own <em>circular doubly linked list</em>. Same idea, hand-rolled for speed.'
             ]
           },
           {
