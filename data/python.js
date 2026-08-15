@@ -287,18 +287,23 @@ t                    # => ([1], 'x')     the tuple never changed; the list did`
               }
             ]
           },
-          { p: 'Three shortcuts from the same module are worth memorising, because they save you writing a loop under time pressure:' },
+          { p: 'Nothing here needs memorising for its own sake. But three jobs come up over and over, and each has a one-line answer in the same module. The comment above each line is the kind of thing an interviewer actually asks — recognising the job is the whole skill:' },
           {
             code: {
               lang: 'python',
               src: `from collections import defaultdict, Counter, deque
 
-groups = defaultdict(list)          # no key checks
+# "Group these users by team."
+groups = defaultdict(list)
 for user in users:
-    groups[user.team].append(user)
+    groups[user.team].append(user)   # no "if the key is missing" check needed
 
-Counter(words).most_common(3)       # top-3 in one line
-queue = deque(maxlen=100)           # ring buffer, drops the oldest`
+# "What are the three most common words?"
+top3 = Counter(words).most_common(3) # instead of: count, sort by count, slice
+
+# "Keep only the last 100 events."
+recent = deque(maxlen=100)
+recent.append(event)                 # the oldest falls off by itself`
             }
           },
           { p: 'One last container question that comes up a lot: <b>does a dict remember the order you added things in?</b> Yes, since Python 3.7, and the promise is part of the language, so every Python must do it. Before that it happened in CPython 3.6 only by accident, and you were told not to rely on it.' },
