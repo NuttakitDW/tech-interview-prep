@@ -67,7 +67,7 @@
   color: var(--ash-2);
 }
 
-/* link between the two prep sites, sitting in the masthead */
+/* links between the prep pages, sitting in the masthead */
 .crosslink {
   font-family: var(--mono);
   font-size: 0.62rem;
@@ -466,6 +466,25 @@ pre[data-lang]::after {
 }
 
 .note .lbl { color: var(--amber); display: block; margin-bottom: 0.3rem; }
+
+/* the transfer — set in serif so it reads as an aside, not another callout */
+.bridge {
+  margin: 1.2rem 0 1rem;
+  padding: 0.1rem 0 0.1rem 1.05rem;
+  border-left: 2px solid var(--edge-lit);
+}
+
+.bridge .lbl { display: block; margin-bottom: 0.5rem; color: var(--signal-d); }
+
+.bridge p {
+  margin: 0 0 0.55rem;
+  font-family: var(--serif);
+  font-size: 1.04rem;
+  line-height: 1.5;
+  color: var(--pale);
+}
+
+.bridge p:last-child { margin-bottom: 0; }
 
 /* the "say this" answer block */
 .say {

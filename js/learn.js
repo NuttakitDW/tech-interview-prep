@@ -21,6 +21,16 @@
       );
     }
 
+    /* The transfer: what this mechanism is worth away from the platform
+       it came from. Always the last block on a card, just above the answer. */
+    if (block.bridge) {
+      return (
+        '<div class="bridge"><span class="lbl">Carry it into their product</span>' +
+        block.bridge.map(function (i) { return '<p>' + i + '</p>'; }).join('') +
+        '</div>'
+      );
+    }
+
     if (block.diagram) {
       return (
         '<figure class="diagram"><span class="lbl">' + (block.caption || 'The model') + '</span>' +

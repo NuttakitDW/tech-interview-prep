@@ -206,5 +206,55 @@
       { t: 'Fowler - Conway\'s law', u: 'https://martinfowler.com/bliki/ConwaysLaw.html' },
       { t: 'Fowler - Microservice premium', u: 'https://martinfowler.com/bliki/MicroservicePremium.html' },
     ],
+    'ox-fork': [
+      { t: 'Options for extending the platform', u: 'https://docs.openedx.org/projects/edx-platform/en/latest/concepts/extension_points.html' },
+      { t: 'Platform overview', u: 'https://docs.openedx.org/en/latest/developers/concepts/platform_overview.html' },
+      { t: 'openedx-platform (was edx-platform)', u: 'https://github.com/openedx/openedx-platform' },
+    ],
+    'ox-plugin': [
+      { t: 'Django app plugins', u: 'https://github.com/openedx/edx-django-utils/blob/master/edx_django_utils/plugins/README.rst' },
+      { t: 'How to create a plugin app', u: 'https://github.com/openedx/edx-django-utils/blob/master/edx_django_utils/plugins/docs/how_tos/how_to_create_a_plugin_app.rst' },
+      { t: 'Python entry points', u: 'https://packaging.python.org/en/latest/specifications/entry-points/' },
+    ],
+    'ox-hooks': [
+      { t: 'OEP-50 - Hooks extension framework', u: 'https://docs.openedx.org/projects/openedx-proposals/en/latest/architectural-decisions/oep-0050-hooks-extension-framework.html' },
+      { t: 'Create a pipeline step', u: 'https://docs.openedx.org/projects/openedx-filters/en/latest/how-tos/create-a-pipeline-step.html' },
+      { t: 'openedx-events', u: 'https://github.com/openedx/openedx-events' },
+    ],
+    'ox-xblock': [
+      { t: 'XBlock methods - views and handlers', u: 'https://docs.openedx.org/projects/xblock/en/latest/xblock-tutorial/concepts/methods.html' },
+      { t: 'Integrating XBlocks with the platform', u: 'https://docs.openedx.org/en/latest/developers/references/developer_guide/extending_platform/xblocks.html' },
+    ],
+    'ox-scopes': [
+      { t: 'XBlock fields and scopes', u: 'https://docs.openedx.org/projects/xblock/en/latest/xblock-tutorial/concepts/fields.html' },
+    ],
+    'ox-publish': [
+      { t: 'Split Mongo modulestore', u: 'https://docs.openedx.org/projects/edx-platform/en/latest/references/docs/xmodule/modulestore/docs/split-mongo.html' },
+      { t: 'Draft and published branches', u: 'https://openedx.atlassian.net/wiki/spaces/PLAT/pages/32309309/Split+Modulestore+Draft+Versioning+Modulestore' },
+    ],
+    'ox-transformers': [
+      { t: 'Course block transformers', u: 'https://openedx.atlassian.net/wiki/spaces/AC/pages/34734111/Course+Block+Transformers' },
+      { t: 'Course Blocks API', u: 'https://openedx.atlassian.net/wiki/spaces/AC/pages/29688043/Course+Blocks+API' },
+    ],
+    'ox-grades': [
+      { t: 'Grades background', u: 'https://docs.openedx.org/projects/edx-platform/en/latest/references/docs/lms/djangoapps/grades/docs/background.html' },
+    ],
+    'ox-jwt': [
+      { t: 'ADR - transport JWT in HTTP cookies', u: 'https://docs.openedx.org/projects/edx-platform/en/latest/references/docs/openedx/core/djangoapps/oauth_dispatch/docs/decisions/0009-jwt-in-session-cookie.html' },
+      { t: 'OEP-42 - Authentication', u: 'https://docs.openedx.org/projects/openedx-proposals/en/latest/best-practices/oep-0042-bp-authentication.html' },
+    ],
+    'ox-eventbus': [
+      { t: 'Open edX event bus', u: 'https://docs.openedx.org/projects/openedx-events/en/latest/concepts/event-bus.html' },
+      { t: 'OEP-52 - Event bus architecture', u: 'https://docs.openedx.org/projects/openedx-proposals/en/latest/architectural-decisions/oep-0052-arch-event-bus-architecture.html' },
+    ],
+    'ox-toggles': [
+      { t: 'Documenting new feature toggles', u: 'https://docs.openedx.org/projects/edx-toggles/en/latest/how_to/documenting_new_feature_toggles.html' },
+      { t: 'OEP-17 - Feature toggles', u: 'https://docs.openedx.org/projects/openedx-proposals/en/latest/best-practices/oep-0017-bp-feature-toggles.html' },
+    ],
+    'ox-mfe': [
+      { t: 'Use a frontend plugin slot', u: 'https://docs.openedx.org/en/latest/site_ops/how-tos/use-frontend-plugin-slots.html' },
+      { t: 'Available frontend plugin slots', u: 'https://docs.openedx.org/en/latest/site_ops/references/frontend-plugin-slots.html' },
+      { t: 'frontend-plugin-framework', u: 'https://github.com/openedx/frontend-plugin-framework' },
+    ],
   };
 })(window.PREP);
