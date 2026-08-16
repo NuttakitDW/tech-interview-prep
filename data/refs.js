@@ -267,6 +267,8 @@
       { t: 'Event loop processing model (HTML spec)', u: 'https://html.spec.whatwg.org/multipage/webappapis.html#event-loop-processing-model' },
       { t: 'Using microtasks', u: 'https://developer.mozilla.org/en-US/docs/Web/API/HTML_DOM_API/Microtask_guide' },
       { t: 'JavaScript execution model', u: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Execution_model' },
+      { t: 'Node.js animated: Event Loop', u: 'https://dev.to/nodedoctors/an-animated-guide-to-nodejs-event-loop-3g62' },
+      { t: 'Video - the event loop in 5 minutes', u: 'https://www.youtube.com/watch?v=lqLSNG_79lI' },
     ],
     'fe-react-slow': [
       { t: 'React memo', u: 'https://react.dev/reference/react/memo' },

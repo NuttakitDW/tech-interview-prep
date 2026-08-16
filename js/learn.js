@@ -103,19 +103,33 @@
     return m + ':' + pad(s);
   }
 
-  /* A deep link back into the source interview, at the second the question is
-     asked. Only rendered on pages that declare PREP.source. */
-  function renderWatch(concept) {
-    if (!P.source || concept.watch == null) return '';
+  /* Deep links into video, at the second the thing is explained.
 
-    var url = 'https://www.youtube.com/watch?v=' + P.source.v + '&t=' + concept.watch + 's';
+     `watch` is a plain number of seconds into the page's own PREP.source,
+     or {v, t, l} to point somewhere else, or an array to offer several —
+     a card can be asked in one video and explained better in another. */
+  function watchLink(spec) {
+    var v = spec.v || (P.source && P.source.v);
+    if (!v || spec.t == null) return '';
 
     return (
-      '<a class="watch" href="' + url + '" target="_blank" rel="noopener noreferrer">' +
-      '<span>Hear it asked</span>' +
-      '<time class="num">' + clock(concept.watch) + '</time>' +
+      '<a class="watch" href="https://www.youtube.com/watch?v=' + v + '&t=' + spec.t + 's"' +
+      ' target="_blank" rel="noopener noreferrer">' +
+      '<span>' + (spec.l || 'Hear it asked') + '</span>' +
+      '<time class="num">' + clock(spec.t) + '</time>' +
       '</a>'
     );
+  }
+
+  function renderWatch(concept) {
+    if (concept.watch == null) return '';
+
+    var links = [].concat(concept.watch)
+      .map(function (w) { return typeof w === 'number' ? { t: w } : w; })
+      .map(watchLink)
+      .join('');
+
+    return links ? '<div class="watch__row">' + links + '</div>' : '';
   }
 
   function renderConcept(concept, index) {

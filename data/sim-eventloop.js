@@ -24,6 +24,67 @@
 
     runs: [
       {
+        id: 'offload',
+        label: 'Offload',
+        blurb:
+          'The journey every async callback takes. Nothing here is about priority yet &mdash; just <b>where the work goes</b> while it waits, and why the thread stays free.',
+        code: [
+          "console.log('start');",
+          '',
+          'setTimeout(showUser, 2000);',
+          '',
+          "console.log('end');"
+        ],
+        frames: [
+          {
+            phase: 'task', line: null, stack: ['(script)'], web: [], micro: [], macro: [], out: [],
+            note: 'The script runs on the call stack, top to bottom.'
+          },
+          {
+            line: 0, stack: ['(script)', "log('start')"],
+            note: 'Calling a function pushes it on top of the stack.'
+          },
+          {
+            stack: ['(script)'], out: ['start'],
+            note: 'It returns and pops off. Last in, first out — the top must finish before anything under it continues.'
+          },
+          {
+            line: 2, stack: ['(script)', 'setTimeout(showUser, 2000)'],
+            note: 'setTimeout is called. This is the slow one — two whole seconds.'
+          },
+          {
+            stack: ['(script)'], web: ['timer 2000ms - showUser'],
+            note: 'JavaScript does <b>not</b> wait. It hands the timer to the browser and returns immediately. The two seconds are counted over there, not here.'
+          },
+          {
+            line: 4, stack: ['(script)', "log('end')"],
+            note: 'So the very next line runs, while the timer is still pending.'
+          },
+          {
+            stack: ['(script)'], out: ['start', 'end'],
+            note: "'end' prints roughly two seconds before showUser will. That is the whole point of offloading — the thread was never blocked."
+          },
+          {
+            stack: [], line: null,
+            note: 'The script finishes and the stack empties. The page is fully responsive — scrolling, clicking, painting — with work still outstanding.'
+          },
+          {
+            web: [], macro: ['showUser'],
+            note: 'Two seconds later the browser is done. It puts the <b>callback</b> at the back of the task queue. It does not interrupt anything to run it.'
+          },
+          { phase: 'drain', note: 'Microtasks first — none in this run.' },
+          { phase: 'render', note: 'The browser paints.' },
+          {
+            phase: 'task', stack: ['showUser'], macro: [],
+            note: 'And only now, with the stack empty, does the loop move the callback across and run it. One rule, and that is the entire loop.'
+          },
+          {
+            stack: [], out: ['start', 'end', '(user shown)'],
+            note: 'Stack, browser, queue, loop. Every async callback takes this path — timers, clicks, network responses, all of it.'
+          }
+        ]
+      },
+      {
         id: 'order',
         label: 'Ordering',
         blurb:
@@ -55,8 +116,12 @@
             note: 'setTimeout is called. It does <b>not</b> run fn — it hands fn to the browser and returns straight away.'
           },
           {
-            stack: ['(script)'], macro: ["fn - '5 task'"],
-            note: 'Even at 0ms the callback is queued as a <b>task</b>. It is first in line, and it will still go last.'
+            stack: ['(script)'], web: ["timer 0ms - '5 task'"],
+            note: 'The timer waits in the browser. Even at 0ms it goes through this route — there is no shortcut back onto the stack.'
+          },
+          {
+            web: [], macro: ["fn - '5 task'"],
+            note: 'The 0ms elapses immediately, so the callback moves to the <b>task queue</b>. It is first in line — and it will still go last.'
           },
           {
             line: 2, stack: ['(script)', '.then(fn)'],
@@ -200,10 +265,10 @@
           },
           {
             line: 1, stack: ['(script)', 'setTimeout(fn, 0)'],
-            note: 'This time it schedules itself as a task, not a microtask.'
+            note: 'This time it schedules itself through the browser, as a task rather than a microtask.'
           },
           {
-            stack: [], macro: ['polite #1'], line: null,
+            stack: [], web: [], macro: ['polite #1'], line: null,
             note: 'The script finishes and the stack empties.'
           },
           {

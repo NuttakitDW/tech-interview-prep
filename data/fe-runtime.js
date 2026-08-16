@@ -113,20 +113,74 @@ transform, opacity     ->  start at Composite.  One stage, off the main thread.`
         title: 'One task, then every microtask, then a frame',
         tags: ['javascript', 'hot'],
         ask: 'Can you give me a high-level overview of the event loop?',
-        watch: 1831,
+        watch: [
+          { v: 'lqLSNG_79lI', t: 69, l: 'See the model' },
+          { t: 1831, l: 'Hear it asked' }
+        ],
         body: [
-          { p: 'JavaScript on the page runs on one thread. That is a deliberate choice, not a limitation nobody got around to fixing. The DOM is a single shared tree, and if two threads could mutate it at once you would need locks around every node, and every UI bug would become a race condition. One thread means the DOM only ever changes in one place at a time.' },
-          { p: 'The cost of that choice is that everything shares one queue of turns. The event loop is the thing handing out the turns.' },
-          { p: 'There are three places work sits:' },
+          { p: 'Build this up in four moves. Each one answers the question the move before it raises, and the last one is where the senior answer lives.' },
+
+          { p: '<b>One. JavaScript runs on a single thread.</b>' },
+          { p: 'That is a deliberate choice. The DOM is one shared tree. If two threads could change it at once you would need a lock around every node, and every layout bug would become a race condition. One thread means the page only ever changes in one place at a time.' },
+          { p: 'There is a distinction here worth making out loud, because it is the one people fumble. JavaScript cannot do two things <b>in parallel</b> — two things in the same instant. It absolutely can do many things <b>concurrently</b> — many things in flight at once, making progress in turns. Ten <code>fetch</code> calls can be in the air together. What cannot overlap is <i>your JavaScript running</i>.' },
+
+          { p: '<b>Two. So the slow work is handed off.</b>' },
+          { p: 'This is the part that makes the rest make sense. When you call <code>setTimeout</code>, or <code>fetch</code>, or <code>addEventListener</code>, JavaScript does not sit and wait. It hands the job to the browser and returns on the very next line.' },
+          { p: 'And the browser is not JavaScript. Timers, the network stack, the file and DOM event plumbing are all implemented in the browser\'s own code — typically C++ — and that code <b>is</b> multi-threaded. So the concurrency is real. It just does not live in your language. (Node does the same thing with a C library called libuv; same idea, different name.)' },
+          { p: 'So there are four places work can be, and a one-way journey between them:' },
+          {
+            diagram: `  your code
+      │
+      ▼
+┌─────────────┐   hands off the slow part    ┌──────────────────┐
+│  CALL STACK │ ───────────────────────────> │  BROWSER (Web    │
+│             │   setTimeout, fetch, click   │  APIs, C++,      │
+│  last in,   │                              │  multi-threaded) │
+│  first out  │                              │                  │
+│             │                              │  the waiting     │
+│             │                              │  happens here    │
+└─────────────┘                              └──────────────────┘
+      ▲                                               │
+      │                                               │ done —
+      │  ONLY when the stack is empty                 │ hand back
+      │                                               │ the callback
+      │            ┌──────────────────┐               │
+      └─────────── │  CALLBACK QUEUE  │ <─────────────┘
+        event loop │  first in,       │
+                   │  first out       │
+                   └──────────────────┘
+
+  Nothing jumps this queue. Nothing interrupts the stack.`,
+            caption: 'The journey every async callback takes'
+          },
+          { p: 'Read the three boxes as three different shapes:' },
           {
             list: [
-              'The <b>call stack</b> — what is running right now. A function is pushed on, runs to completion, pops off. Nothing interrupts it.',
-              'The <b>task queue</b> (sometimes "macrotasks") — <code>setTimeout</code>, a click handler, a <code>fetch</code> response arriving, a parsed chunk of HTML.',
-              'The <b>microtask queue</b> — <code>.then</code> callbacks, the continuation after an <code>await</code>, <code>queueMicrotask</code>, <code>MutationObserver</code>.'
+              'The <b>call stack</b> is <b>last in, first out</b>. Call a function, it goes on top. If it calls another, that goes on top of it. The top one must finish before anything below it continues. When it returns it pops off.',
+              'The <b>browser</b> is where pending work waits. A two-second timer sits here for two seconds. Your stack is empty and free the whole time.',
+              'The <b>callback queue</b> is <b>first in, first out</b> — an ordinary queue, like a line at a counter. When the browser finishes a job it puts the callback at the back.'
             ]
           },
-          { p: 'The loop itself is not in the JavaScript engine. The stack and the microtask queue belong to V8; the task queues and the loop that drives them belong to the browser. That is why <code>setTimeout</code> is not in the ECMAScript spec but <code>Promise</code> is.' },
-          { p: 'One turn of the loop goes like this, and the order is the whole answer:' },
+
+          { p: '<b>Three. The loop has exactly one rule.</b>' },
+          { p: 'The event loop watches the stack and the queue, and does one thing: <b>if the call stack is empty, take the first callback off the queue and push it onto the stack.</b> That is the entire job.' },
+          { p: 'Two consequences fall straight out of that rule, and both are interview answers.' },
+          {
+            list: [
+              '<code>setTimeout(fn, 0)</code> does not mean "run now". It means "after at least 0ms, <i>and</i> not until the stack is clear". A long synchronous function delays every timer behind it.',
+              'A slow function does not just make itself slow. It holds the stack, so nothing in the queue can land — no clicks, no responses, no rendering. That is what "blocking the main thread" actually means.'
+            ]
+          },
+
+          { p: '<b>Four. The browser adds two things that model leaves out</b> — and this is the part a senior answer is graded on.' },
+          { p: 'There is not one queue. There are two, and they do not have equal rights.' },
+          {
+            list: [
+              'The <b>task queue</b> — <code>setTimeout</code>, a click, a <code>fetch</code> response arriving. The queue described above.',
+              'The <b>microtask queue</b> — <code>.then</code> callbacks, whatever follows an <code>await</code>, <code>queueMicrotask</code>. <b>Higher priority, and drained differently.</b>'
+            ]
+          },
+          { p: 'And between turns the browser needs to paint, or the page freezes no matter how correct your code is. So the real order is:' },
           {
             diagram: `┌─────────────────────────────────────────────────────────────┐
 │                                                             │
@@ -148,7 +202,7 @@ transform, opacity     ->  start at Composite.  One stage, off the main thread.`
   One task per turn.  Every microtask per turn.  At most one frame.`,
             caption: 'The processing model, in order'
           },
-          { p: 'That diagram is the whole answer, but it is much easier to believe once you have watched it move. Step through a turn below &mdash; the three runs are the same machine, and each one isolates a different rule.' },
+          { p: 'That is the whole answer, and it is far easier to believe once you have watched it move. Step through it below. The four runs are the same machine, and each isolates one rule &mdash; start with <b>Offload</b>, which is just the journey above, one frame at a time.' },
           { sim: 'eventloop', caption: 'Run the loop yourself' },
           { p: 'Step 2 is where people go wrong, and it is worth being exact. The loop does not take one microtask and then go and paint. It empties the queue — and if a microtask queues another microtask, that one runs too, in the same turn, before anything else gets a look in.' },
           {
@@ -193,15 +247,25 @@ function polite() { setTimeout(polite, 0); }`
               'The loop cannot pre-empt it. Step 1 says "run it to completion", so until that handler returns, step 3 does not happen, and the page does not paint. The user types and sees the characters appear late. That is what "blocking the main thread" means in practice.',
               'The fix is not a faster function, it is a smaller one: send the main thread many small units of work rather than one large one. Memoise so re-renders do less; move genuinely heavy computation to a Web Worker, which has its own thread and no DOM access.'
             ]
+          },
+          {
+            note: [
+              '<b>Two details to keep straight if the interviewer pushes.</b>',
+              '<b>The loop is not part of the JavaScript engine.</b> The call stack and the microtask queue belong to V8. The task queues, the render step and the loop that drives them belong to the browser. That is exactly why <code>Promise</code> is in the ECMAScript spec and <code>setTimeout</code> is not — <code>setTimeout</code> is a browser API, defined in the HTML spec.',
+              '<b>"One task queue" is a simplification.</b> The browser keeps several, so it can prioritise — user input ahead of a background timer, for instance. Node splits its loop into named phases instead (timers, poll, check, and so on) and adds <code>process.nextTick</code> ahead of promises. Neither detail changes the shape of the answer, but knowing the simplification is a simplification is worth a sentence.'
+            ]
           }
         ],
         say:
-          'JavaScript is single-threaded because the DOM is a single shared tree — one thread means it only ever changes in one place, so you avoid locking every node. The loop hands out turns between a call stack, a task queue and a microtask queue. One turn is: run exactly one task to completion, then drain the entire microtask queue including anything queued while draining, then optionally run rAF callbacks and paint. The detail that matters is that microtasks drain completely rather than one at a time — that is why an endless promise chain freezes the tab forever, but an endless setTimeout chain does not, since each timer is a separate task and the browser gets to paint in between. The bug I have actually hit is the mundane version: one handler doing too much work, so the frame never gets its turn and typing feels laggy.',
+          'I would build it in four steps. JavaScript runs on one thread, because the DOM is a single shared tree and two threads mutating it would mean locking every node — so the useful distinction is that JavaScript cannot run things in parallel, but it can absolutely run them concurrently. That works because the slow work is handed off: when I call setTimeout or fetch, JavaScript does not wait, it passes the job to the browser and returns on the next line, and the browser is C++ and genuinely multi-threaded, so the concurrency is real, it just is not in my language. When the browser finishes, it puts the callback on a queue, and the event loop has exactly one rule — if the call stack is empty, move the first callback from the queue onto the stack. Two things fall out of that: setTimeout(fn, 0) means "when the stack is clear", not "now"; and a slow function blocks everything, because nothing can land while it holds the stack. Then the browser part that model leaves out, which is where the real answer is: there are two queues, not one, and microtasks — .then, await — outrank tasks and are drained completely rather than one at a time, with a chance to paint after. That is why an endless promise chain freezes the tab permanently while an endless setTimeout chain does not.',
         traps: [
           'Getting step 2 and step 3 the wrong way round — saying the loop takes <i>a</i> microtask, then renders, then comes back for the next one. It drains the queue completely first. Everything interesting about microtasks follows from that.',
           'Saying "the event loop is part of V8". The stack and the microtask queue are V8\'s; the task queues and the loop are the browser\'s. That is why <code>setTimeout</code> is not in the ECMAScript spec.',
           'Treating <code>setTimeout(fn, 0)</code> as "run this immediately". It means "queue this as a task", so it runs after all pending microtasks, and after the current one finishes.',
           'Calling the microtask queue the "callback queue" and lumping promises in with timers. Putting <code>.then</code> and <code>setTimeout</code> in the same bucket loses the only distinction the question is testing.',
+          'Using <b>parallel</b> and <b>concurrent</b> interchangeably. JavaScript does not run two things in the same instant; it keeps many things in flight and interleaves them. Ten <code>fetch</code> calls really are overlapping — in the browser\'s threads, not in yours.',
+          'Saying "JavaScript is asynchronous". The language is stubbornly synchronous, top to bottom. The <i>platform</i> underneath it is asynchronous, and the event loop is the seam between the two. Getting this backwards makes the rest of the answer incoherent.',
+          'Reading <code>setTimeout(fn, 2000)</code> as "in exactly two seconds". It is a <i>minimum</i>: after 2000ms the callback is put on the queue, and it runs whenever the stack next empties — which could be much later.',
           'Saying a Web Worker helps with a slow re-render. It cannot touch the DOM. Workers are for computation, not rendering.'
         ]
       },

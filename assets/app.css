@@ -368,11 +368,17 @@
 
 /* Deep link back to the second the question is asked in the source video.
    Sits under the question, aligned to the same indent as the quote above it. */
+.watch__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.2rem;
+  margin: -0.75rem 0 1.15rem calc(0.9rem + 2px);
+}
+
 .watch {
   display: inline-flex;
   align-items: baseline;
   gap: 0.55rem;
-  margin: -0.75rem 0 1.15rem calc(0.9rem + 2px);
   font-family: var(--mono);
   font-size: 0.6rem;
   letter-spacing: 0.16em;
@@ -633,6 +639,17 @@ pre[data-lang]::after {
 .sim__pane--stack { border-left: 2px solid var(--amber); }
 .sim__pane--micro { border-left: 2px solid var(--signal); }
 .sim__pane--macro { border-left: 2px solid var(--ash); }
+
+/* the one box that is not JavaScript — dashed, to say so without a caption */
+.sim__pane--web {
+  border-left: 2px dashed var(--ash-2);
+  background: rgba(5, 7, 6, 0.55);
+}
+
+.sim__pane--web .sim__item {
+  border-style: dashed;
+  color: var(--pale-2);
+}
 
 .sim__pane ul {
   margin: 0;

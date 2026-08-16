@@ -11,7 +11,7 @@
     { id: 'render', n: '3', l: 'Render' }
   ];
 
-  var FIELDS = ['phase', 'line', 'stack', 'micro', 'macro', 'out', 'note'];
+  var FIELDS = ['phase', 'line', 'stack', 'web', 'micro', 'macro', 'out', 'note'];
 
   var TICK = 1400;
 
@@ -23,7 +23,9 @@
   function expand(frames) {
     var full = [];
     frames.forEach(function (f, i) {
-      var prev = i ? full[i - 1] : { phase: 'task', line: null, stack: [], micro: [], macro: [], out: [], note: '' };
+      var prev = i
+        ? full[i - 1]
+        : { phase: 'task', line: null, stack: [], web: [], micro: [], macro: [], out: [], note: '' };
       var next = {};
       FIELDS.forEach(function (k) {
         next[k] = Object.prototype.hasOwnProperty.call(f, k) ? f[k] : prev[k];
@@ -79,8 +81,12 @@
 
       '<div class="sim__panes">' +
       '<div class="sim__pane sim__pane--stack">' +
-      '<span class="lbl">Call stack</span>' +
+      '<span class="lbl">Call stack &mdash; last in, first out</span>' +
       '<ul data-el="stack"></ul>' +
+      '</div>' +
+      '<div class="sim__pane sim__pane--web">' +
+      '<span class="lbl">Browser &mdash; where waiting happens</span>' +
+      '<ul data-el="web"></ul>' +
       '</div>' +
       '<div class="sim__pane sim__pane--micro">' +
       '<span class="lbl">Microtask queue</span>' +
@@ -124,9 +130,10 @@
 
     function draw() {
       var f = frames[at];
-      var prev = at ? frames[at - 1] : { stack: [], micro: [], macro: [], out: [] };
+      var prev = at ? frames[at - 1] : { stack: [], web: [], micro: [], macro: [], out: [] };
 
       el.stack.innerHTML = queue(f.stack.slice().reverse(), prev.stack, 'empty');
+      el.web.innerHTML = queue(f.web, prev.web, 'nothing pending');
       el.micro.innerHTML = queue(f.micro, prev.micro, 'empty');
       el.macro.innerHTML = queue(f.macro, prev.macro, 'empty');
 
