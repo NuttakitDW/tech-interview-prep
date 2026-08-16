@@ -27,6 +27,7 @@
         title: 'Constrain first, generate second',
         tags: ['ai', 'hot'],
         ask: 'What is your AI workflow for front-end engineering, beyond just asking Claude Code?',
+        watch: 206,
         body: [
           { p: 'The weak answer names tools. The strong answer describes the constraints you put in place <b>before</b> generating anything, because that is the only point at which you get to decide what the output looks like.' },
           { p: 'The reason is worth stating out loud, because it explains every failure below it. These models are trained and tuned to make a single prompt produce something that looks right. That is what makes them extraordinary at demos. It is also why they optimise locally: the fastest route to a component that looks correct is to inline the colour, duplicate the helper, and hold a second copy of the state next to the first. Nothing in the objective rewards fitting into a codebase it can only partly see.' },
@@ -85,6 +86,7 @@
         title: 'Static checks first, because they are deterministic and nearly free',
         tags: ['ai', 'tooling'],
         ask: 'How do you keep front-end code quality high when working with AI?',
+        watch: 457,
         body: [
           { p: 'Split the answer before you start giving it. This is the move that makes the response sound structured rather than like a list of things you have heard of.' },
           {
@@ -147,6 +149,7 @@
         title: 'Coverage measures execution, not assertion',
         tags: ['ai', 'testing'],
         ask: 'AI can now generate hundreds of lines of code and enormous pull requests. What is your approach to front-end testing?',
+        watch: 657,
         body: [
           { p: 'Three types, and be ready to say what each is for:' },
           {
@@ -238,6 +241,7 @@ it('renders', () => {
         title: 'Fewer changes per feature is the whole optimisation',
         tags: ['ai', 'architecture'],
         ask: 'How do you keep your token spend low in front-end engineering?',
+        watch: 827,
         body: [
           { p: 'The framing that makes this a good answer: the way you reduce token spend is the same way you have always reduced the cost of change. <b>Fewer files touched per feature</b> — which is what modularity, decoupling and reuse were always for. Nothing here is new engineering advice; the bill just got itemised.' },
           { p: 'Cost has two sides and they behave differently:' },

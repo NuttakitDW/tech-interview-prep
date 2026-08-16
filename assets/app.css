@@ -366,6 +366,42 @@
   margin: 0 0 1.1rem;
 }
 
+/* Deep link back to the second the question is asked in the source video.
+   Sits under the question, aligned to the same indent as the quote above it. */
+.watch {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  margin: -0.75rem 0 1.15rem calc(0.9rem + 2px);
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ash);
+  text-decoration: none;
+  transition: color 0.2s var(--ease);
+}
+
+.watch::before {
+  content: "\2192";
+  color: var(--signal-d);
+}
+
+.watch time {
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  color: var(--signal-d);
+  border-bottom: 1px solid transparent;
+  transition: color 0.2s var(--ease), border-color 0.2s var(--ease);
+}
+
+.watch:hover { color: var(--pale-2); }
+
+.watch:hover time {
+  color: var(--signal);
+  border-bottom-color: var(--signal-d);
+}
+
 .concept__body > *:last-child { margin-bottom: 0; }
 
 .concept__body ul {

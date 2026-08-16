@@ -30,6 +30,7 @@
         title: 'Four layers, each one absorbing a decision',
         tags: ['architecture'],
         ask: 'What makes a good design system?',
+        watch: 1010,
         body: [
           { p: 'A design system is not a component library. It is a set of layers, and each layer exists to take a decision away from the person building a screen — which is what makes the screens consistent, and what makes them fast to build.' },
           {
@@ -104,6 +105,7 @@
         title: 'Everyone says CDN. The answer is how you chunk and cache',
         tags: ['architecture', 'performance'],
         ask: 'How would you scale a front-end application from 1,000 daily users to 100,000?',
+        watch: 2526,
         body: [
           { p: 'Scope it first: this is the front-end half. Going to 100,000 daily users is mostly a backend and database problem, and saying so shows you know where the hard part is.' },
           { p: 'Then split on rendering strategy, because the two answers barely overlap.' },
@@ -180,6 +182,7 @@ user ──> CDN edge                  user ──> CDN edge  (static assets)
         title: 'The shape of the traffic picks the transport',
         tags: ['api', 'ai'],
         ask: 'If we were to integrate an LLM-powered chatbot into our front end, what real-time communication protocol would you use, and why?',
+        watch: 2848,
         body: [
           { p: 'Answer this by describing the traffic first, then choosing. LLM streaming has a specific and unusual shape: <b>one request from the client, then a long one-way stream of tokens back</b>. It is not conversational at the protocol level, even though the product is a conversation.' },
           {

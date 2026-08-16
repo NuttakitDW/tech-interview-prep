@@ -33,6 +33,7 @@
         title: 'The property decides the pipeline, not CSS versus JavaScript',
         tags: ['performance', 'hot'],
         ask: 'An AI coding agent built a button that gets bigger on hover by changing the button\'s width on the mouseenter event. Any thoughts on this?',
+        watch: 30,
         body: [
           { p: 'The problem is not that it used JavaScript. The problem is that it animated <code>width</code>.' },
           { p: 'To put a frame on screen the browser runs a pipeline. Which stage it has to start from depends entirely on <b>which property you changed</b>.' },
@@ -112,6 +113,7 @@ transform, opacity     ->  start at Composite.  One stage, off the main thread.`
         title: 'One task, then every microtask, then a frame',
         tags: ['javascript', 'hot'],
         ask: 'Can you give me a high-level overview of the event loop?',
+        watch: 1831,
         body: [
           { p: 'JavaScript on the page runs on one thread. That is a deliberate choice, not a limitation nobody got around to fixing. The DOM is a single shared tree, and if two threads could mutate it at once you would need locks around every node, and every UI bug would become a race condition. One thread means the DOM only ever changes in one place at a time.' },
           { p: 'The cost of that choice is that everything shares one queue of turns. The event loop is the thing handing out the turns.' },
@@ -206,6 +208,7 @@ function polite() { setTimeout(polite, 0); }`
         title: 'Two different bugs share the word "slow"',
         tags: ['react', 'performance'],
         ask: 'You are handed a React codebase that has been vibe coded. The product manager complains the application is slow. How would you deal with this?',
+        watch: 2142,
         body: [
           { p: 'First move is a question, not a fix. "Slow" covers two unrelated problems with two unrelated investigations, and guessing wrong wastes the week.' },
           {
@@ -286,6 +289,7 @@ function Table({ rows }) {
         title: 'Object versus Map: keys, collisions, and what you are optimising for',
         tags: ['javascript'],
         ask: 'What is the difference between an object and a Map?',
+        watch: 2334,
         body: [
           { p: 'The headline difference is what is allowed to be a key.' },
           {
@@ -416,6 +420,7 @@ Integer-like keys are reordered ahead of the rest:
         title: 'WeakMap, reachability, and how a cache becomes a leak',
         tags: ['javascript', 'memory'],
         ask: 'What is the difference between a Map and a WeakMap? Touch on memory management and garbage collection while you are at it.',
+        watch: 2397,
         body: [
           { p: 'Start with how JavaScript decides something is garbage, because both halves of the answer come out of it.' },
           { p: 'The collector does not count references. It starts from a set of <b>roots</b> — the global object, and whatever is live on the call stack — and walks every reference it can follow. Anything it reaches is kept. Anything it never reaches is unreachable, and unreachable memory is collected. That is the whole model: <b>reachability from the roots</b>, not "is anyone still using this".' },

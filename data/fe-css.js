@@ -27,6 +27,7 @@
         title: 'Four boxes, and two things that are not boxes at all',
         tags: ['css', 'hot'],
         ask: 'Can you explain, at least at a high level, the CSS box model?',
+        watch: 1209,
         body: [
           { p: 'Every element the browser lays out is a rectangle, whatever it looks like on screen. A circle is a rectangle with a corner radius. The page is a set of nested rectangles.' },
           { p: 'Each element is made of four boxes, one inside the next:' },
@@ -111,6 +112,7 @@
         title: 'Specificity is a three-part tuple, not a number',
         tags: ['css'],
         ask: 'How does CSS specificity work?',
+        watch: 1486,
         body: [
           { p: 'When two rules set the same property on the same element, the browser has to pick one. Specificity is one step of that decision — not the whole thing, which matters, because there are things that beat it outright.' },
           { p: 'Every selector scores as three counters, conventionally written <code>A-B-C</code>:' },
@@ -197,6 +199,7 @@ C   element types,            div  a  ::before
         title: 'Responsive by default, with breakpoints as the last resort',
         tags: ['css'],
         ask: 'What are the core principles of responsive design?',
+        watch: 1698,
         body: [
           { p: 'The goal is a layout that adapts because of how it was built, not because you enumerated the screen sizes it has to survive. Every breakpoint you write is a size you thought of; the bug is always at a size you did not.' },
           { p: 'In rough order of leverage:' },

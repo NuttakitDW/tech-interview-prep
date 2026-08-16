@@ -85,6 +85,27 @@
     return '';
   }
 
+  function clock(seconds) {
+    var m = Math.floor(seconds / 60);
+    var s = seconds % 60;
+    return m + ':' + pad(s);
+  }
+
+  /* A deep link back into the source interview, at the second the question is
+     asked. Only rendered on pages that declare PREP.source. */
+  function renderWatch(concept) {
+    if (!P.source || concept.watch == null) return '';
+
+    var url = 'https://www.youtube.com/watch?v=' + P.source.v + '&t=' + concept.watch + 's';
+
+    return (
+      '<a class="watch" href="' + url + '" target="_blank" rel="noopener noreferrer">' +
+      '<span>Hear it asked</span>' +
+      '<time class="num">' + clock(concept.watch) + '</time>' +
+      '</a>'
+    );
+  }
+
   function renderConcept(concept, index) {
     var tags = (concept.tags || [])
       .map(function (t) {
@@ -120,6 +141,7 @@
       '<span class="concept__tags">' + tags + '</span>' +
       '</div>' +
       '<p class="ask">' + concept.ask + '</p>' +
+      renderWatch(concept) +
       '<div class="concept__body">' + concept.body.map(renderBlock).join('') + '</div>' +
       '<div class="say"><span class="lbl">Say this out loud</span><p>' + concept.say + '</p></div>' +
       traps +
