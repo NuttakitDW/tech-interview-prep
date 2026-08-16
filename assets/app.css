@@ -479,6 +479,318 @@ pre[data-lang]::after {
 
 .diagram .lbl { display: block; margin-bottom: 0.7rem; color: var(--signal-d); }
 
+/* ---------- runnable diagram: the event loop simulator ---------- */
+
+.diagram--sim { overflow-x: visible; }
+
+/* .concept__body decorates every <li> with an absolutely positioned dash and
+   a bottom margin. The runner draws its own lists, so opt out once, here,
+   before any of the rules below re-declare a marker of their own. */
+.sim li { position: static; margin-bottom: 0; }
+.sim li::before { content: none; }
+
+.sim__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.75rem;
+}
+
+/* three labels do not fit a phone; let the row scroll rather than
+   wrap, so the segmented control keeps its shape */
+.sim__runs {
+  max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.sim__runs::-webkit-scrollbar { display: none; }
+
+.sim__runs button { white-space: nowrap; }
+
+.sim__ctl {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-left: auto;
+}
+
+.sim__btn {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--pale-2);
+  background: var(--ink-3);
+  border: 1px solid var(--edge-lit);
+  border-radius: var(--r);
+  padding: 0.42rem 0.7rem;
+  cursor: pointer;
+  transition: color 0.18s var(--ease), border-color 0.18s var(--ease), background 0.18s var(--ease);
+}
+
+.sim__btn:hover:not(:disabled) {
+  color: var(--signal);
+  border-color: var(--signal-d);
+  background: var(--moss);
+}
+
+.sim__btn:disabled { opacity: 0.35; cursor: default; }
+
+.sim__count {
+  font-size: 0.62rem;
+  color: var(--ash);
+  min-width: 3.4rem;
+  text-align: right;
+}
+
+.sim__blurb {
+  margin: 0 0 0.9rem;
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: var(--pale-2);
+}
+
+.sim__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0.8rem;
+  align-items: start;
+}
+
+.sim__grid > * { min-width: 0; }
+
+/* the code, with the executing line lit */
+.sim__code {
+  margin: 0;
+  padding: 0.7rem 0.7rem 0.7rem 0;
+  list-style: none;
+  counter-reset: ln;
+  background: var(--ink);
+  border: 1px solid var(--edge);
+  border-radius: var(--r);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  line-height: 1.75;
+  overflow-x: auto;
+}
+
+.sim__code li {
+  counter-increment: ln;
+  display: flex;
+  gap: 0.75rem;
+  padding: 0 0.5rem 0 0;
+  border-left: 2px solid transparent;
+  color: var(--ash);
+  white-space: pre;
+  transition: color 0.18s var(--ease), background 0.18s var(--ease), border-color 0.18s var(--ease);
+}
+
+.sim__code li::before {
+  content: counter(ln);
+  position: static;
+  width: 1.9rem;
+  height: auto;
+  background: none;
+  flex: none;
+  text-align: right;
+  color: var(--ash-2);
+}
+
+/* the site renders inline <code> as a bordered chip; inside the runner
+   each line is plain source, so undo it here */
+.sim__code code {
+  font-size: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  white-space: pre;
+}
+
+.sim__code li.is-on {
+  color: var(--pale);
+  background: rgba(0, 217, 95, 0.09);
+  border-left-color: var(--signal);
+}
+
+.sim__code li.is-on::before { color: var(--signal-d); }
+
+/* the three live containers */
+.sim__panes { display: grid; gap: 0.55rem; }
+
+.sim__pane {
+  border: 1px solid var(--edge);
+  border-radius: var(--r);
+  background: var(--ink-2);
+  padding: 0.55rem 0.65rem 0.6rem;
+}
+
+.sim__pane .lbl { display: block; margin-bottom: 0.45rem; font-size: 0.55rem; }
+
+.sim__pane--stack { border-left: 2px solid var(--amber); }
+.sim__pane--micro { border-left: 2px solid var(--signal); }
+.sim__pane--macro { border-left: 2px solid var(--ash); }
+
+.sim__pane ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-height: 2.8rem;
+}
+
+.sim__item {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--pale);
+  background: var(--ink-4);
+  border: 1px solid var(--edge-lit);
+  border-radius: var(--r);
+  padding: 0.3rem 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* top of the stack is what is running right now */
+.sim__pane--stack .sim__item:first-child {
+  border-color: var(--amber);
+  color: var(--amber);
+}
+
+.sim__pane--micro .sim__item { border-color: var(--signal-d); }
+
+.sim__item.is-new { animation: simIn 0.32s var(--ease); }
+
+@keyframes simIn {
+  from { opacity: 0; transform: translateX(-0.5rem); }
+  to   { opacity: 1; transform: none; }
+}
+
+.sim__empty {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  color: var(--ash-2);
+  padding: 0.3rem 0;
+}
+
+/* the turn, as three steps */
+.sim__phases {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0.9rem 0 0.75rem;
+}
+
+.sim__phase {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--mono);
+  font-size: 0.56rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ash);
+  border: 1px solid var(--edge);
+  border-radius: 99px;
+  padding: 0.28rem 0.65rem;
+  transition: color 0.2s var(--ease), border-color 0.2s var(--ease), background 0.2s var(--ease);
+}
+
+.sim__phase b {
+  color: var(--ash-2);
+  font-weight: 400;
+}
+
+.sim__phase.is-on {
+  color: var(--ink);
+  background: var(--signal);
+  border-color: var(--signal);
+}
+
+.sim__phase.is-on b { color: var(--moss); }
+
+.sim__arrow { color: var(--ash-2); font-size: 0.7rem; }
+
+/* the render step that never arrives */
+.sim__phases.is-frozen .sim__phase.is-on {
+  background: var(--rust);
+  border-color: var(--rust);
+  color: var(--ink);
+}
+
+.sim__phases.is-frozen .sim__phase[data-phase="render"] {
+  color: var(--rust);
+  border-color: var(--rust);
+  border-style: dashed;
+  text-decoration: line-through;
+}
+
+.sim__note {
+  margin: 0 0 0.8rem;
+  min-height: 2.9rem;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--pale);
+  border-left: 2px solid var(--moss);
+  padding-left: 0.8rem;
+}
+
+.sim__note b { color: var(--signal); font-weight: 500; }
+
+.sim__out {
+  border-top: 1px dashed var(--edge);
+  padding-top: 0.7rem;
+}
+
+.sim__out .lbl { display: block; margin-bottom: 0.45rem; font-size: 0.55rem; }
+
+.sim__out ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  min-height: 1.7rem;
+}
+
+.sim__out li {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--signal);
+  background: rgba(0, 217, 95, 0.08);
+  border: 1px solid var(--signal-d);
+  border-radius: var(--r);
+  padding: 0.22rem 0.5rem;
+}
+
+.sim__out li.is-new { animation: simIn 0.32s var(--ease); }
+
+/* the placeholder is not a printed line — strip the chip back off it */
+.sim__out li.sim__empty {
+  color: var(--ash-2);
+  background: none;
+  border: 0;
+  padding: 0.22rem 0;
+}
+
+@media (max-width: 860px) {
+  .sim__grid { grid-template-columns: minmax(0, 1fr); }
+  .sim__ctl { margin-left: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sim__item.is-new,
+  .sim__out li.is-new { animation: none; }
+}
+
 .diagram pre {
   margin: 0;
   padding: 0;

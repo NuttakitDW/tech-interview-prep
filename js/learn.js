@@ -31,6 +31,18 @@
       );
     }
 
+    /* A diagram you can run. The host is filled in by js/sim.js after the
+       module HTML lands; without that file it stays an empty figure. */
+    if (block.sim) {
+      var sim = (P.sims && P.sims[block.sim]) || {};
+      return (
+        '<figure class="diagram diagram--sim">' +
+        '<span class="lbl">' + (block.caption || sim.caption || 'Run it') + '</span>' +
+        '<div data-sim="' + block.sim + '"></div>' +
+        '</figure>'
+      );
+    }
+
     if (block.diagram) {
       return (
         '<figure class="diagram"><span class="lbl">' + (block.caption || 'The model') + '</span>' +
@@ -255,6 +267,8 @@
         btn.textContent = open === items.length ? 'Close all' : 'Open all';
       }, true);
     });
+
+    if (P.mountSims) P.mountSims(root.modules);
 
     spy(root);
 

@@ -148,6 +148,8 @@ transform, opacity     ->  start at Composite.  One stage, off the main thread.`
   One task per turn.  Every microtask per turn.  At most one frame.`,
             caption: 'The processing model, in order'
           },
+          { p: 'That diagram is the whole answer, but it is much easier to believe once you have watched it move. Step through a turn below &mdash; the three runs are the same machine, and each one isolates a different rule.' },
+          { sim: 'eventloop', caption: 'Run the loop yourself' },
           { p: 'Step 2 is where people go wrong, and it is worth being exact. The loop does not take one microtask and then go and paint. It empties the queue — and if a microtask queues another microtask, that one runs too, in the same turn, before anything else gets a look in.' },
           {
             code: {
