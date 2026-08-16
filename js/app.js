@@ -1,7 +1,11 @@
 /* Boot: mode + track switching, hero stats, reading meter, deep links. */
 (function (P) {
+  /* A page declares its own tracks in the inline PREP bootstrap. A page with
+     one track hides the switch rather than offering a choice of one. */
+  var tracks = (P.tracks && P.tracks.length) ? P.tracks : [{ v: 'backend', l: 'Backend' }];
+
   var mode = 'learn';
-  var track = 'backend';
+  var track = tracks[0].v;
 
   var el = {};
 
@@ -33,7 +37,9 @@
   function applyMode() {
     el.viewLearn.hidden = mode !== 'learn';
     el.viewQuiz.hidden = mode !== 'quiz';
-    el.trackGroup.style.visibility = mode === 'learn' ? 'visible' : 'hidden';
+    if (tracks.length > 1) {
+      el.trackGroup.style.visibility = mode === 'learn' ? 'visible' : 'hidden';
+    }
     el.meter.hidden = mode !== 'learn';
     document.body.classList.toggle('is-quiz', mode === 'quiz');
     setSelected(el.modeGroup, mode);
@@ -95,6 +101,16 @@
       statModules: document.getElementById('stat-modules'),
       statQuestions: document.getElementById('stat-questions')
     };
+
+    el.trackGroup.innerHTML = tracks
+      .map(function (t, i) {
+        return (
+          '<button role="tab" data-value="' + t.v + '"' +
+          ' aria-selected="' + (i === 0) + '">' + t.l + '</button>'
+        );
+      })
+      .join('');
+    if (tracks.length < 2) el.trackGroup.style.display = 'none';
 
     el.modeGroup.addEventListener('click', function (e) {
       var b = e.target.closest('button');

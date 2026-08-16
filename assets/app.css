@@ -67,6 +67,32 @@
   color: var(--ash-2);
 }
 
+/* link between the two prep sites, sitting in the masthead */
+.crosslink {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ash);
+  text-decoration: none;
+  padding: 0.5rem 0.8rem;
+  border: 1px solid var(--edge);
+  border-radius: var(--r);
+  white-space: nowrap;
+  transition: color 0.2s var(--ease), border-color 0.2s var(--ease);
+}
+
+.crosslink::before {
+  content: "\2192";
+  margin-right: 0.5rem;
+  color: var(--signal-d);
+}
+
+.crosslink:hover {
+  color: var(--signal);
+  border-color: var(--signal-d);
+}
+
 /* segmented control */
 .seg {
   display: inline-flex;

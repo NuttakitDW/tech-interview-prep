@@ -68,6 +68,18 @@
       : P.quiz.filter(function (q) { return q.track === scope; });
   }
 
+  /* Scope choices follow the page's tracks. "Everything" only means something
+     when there is more than one track to combine. */
+  function scopeOptions() {
+    var tracks = (P.tracks && P.tracks.length)
+      ? P.tracks
+      : [{ v: 'backend', l: 'Backend' }, { v: 'frontend', l: 'Frontend' }];
+
+    var options = tracks.map(function (t) { return { v: t.v, l: t.l }; });
+    if (options.length > 1) options.push({ v: 'all', l: 'Everything' });
+    return options;
+  }
+
   /* ---------------- setup ---------------- */
 
   function seg(name, value, options) {
@@ -88,18 +100,17 @@
   function renderSetup() {
     var total = pool(state.scope).length;
     var record = best()[state.scope];
+    var scopes = scopeOptions();
 
     return (
       '<div class="panel rise">' +
       '<span class="lbl">Quiz</span>' +
       '<h2 style="margin:.6rem 0 1.4rem">Prove you can <em>recall</em> it</h2>' +
-      '<div class="setup__row"><span class="lbl">Scope</span>' +
-      seg('scope', state.scope, [
-        { v: 'backend', l: 'Backend' },
-        { v: 'frontend', l: 'Frontend' },
-        { v: 'all', l: 'Everything' }
-      ]) +
-      '</div>' +
+      (scopes.length > 1
+        ? '<div class="setup__row"><span class="lbl">Scope</span>' +
+          seg('scope', state.scope, scopes) +
+          '</div>'
+        : '') +
       '<div class="setup__row"><span class="lbl">Length</span>' +
       seg('length', state.length, [
         { v: 8, l: '8' },
@@ -310,6 +321,7 @@
   }
 
   P.initQuiz = function () {
+    state.scope = scopeOptions()[0].v;
     root = document.getElementById('quiz-root');
     root.addEventListener('click', onClick);
     document.addEventListener('keydown', onKey);

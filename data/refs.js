@@ -160,5 +160,51 @@
       { t: 'Turbo Native Modules', u: 'https://reactnative.dev/docs/turbo-native-modules-introduction' },
       { t: 'React Native DevTools', u: 'https://reactnative.dev/docs/debugging' },
     ],
+    'ar-rest': [
+      { t: 'Fielding, REST architectural style (ch. 5)', u: 'https://www.ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm' },
+      { t: 'RFC 9110 - HTTP semantics, methods and idempotency', u: 'https://www.rfc-editor.org/rfc/rfc9110.html' },
+      { t: 'Richardson Maturity Model', u: 'https://martinfowler.com/articles/richardsonMaturityModel.html' },
+    ],
+    'ar-negotiation': [
+      { t: 'MDN - Content negotiation', u: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Content_negotiation' },
+      { t: 'MDN - HTTP compression', u: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Compression' },
+      { t: 'RFC 9111 - HTTP caching and Vary', u: 'https://www.rfc-editor.org/rfc/rfc9111.html' },
+    ],
+    'ar-sql-nosql': [
+      { t: 'PostgreSQL JSON types', u: 'https://www.postgresql.org/docs/current/datatype-json.html' },
+      { t: 'MongoDB data modelling', u: 'https://www.mongodb.com/docs/manual/data-modeling/' },
+    ],
+    'ar-graphql': [
+      { t: 'Introduction to GraphQL', u: 'https://graphql.org/learn/' },
+      { t: 'GraphQL specification', u: 'https://spec.graphql.org/October2021/' },
+    ],
+    'ar-graphql-cost': [
+      { t: 'GraphQL caching', u: 'https://graphql.org/learn/caching/' },
+      { t: 'GraphQL specification - response format', u: 'https://spec.graphql.org/October2021/' },
+    ],
+    'ar-nplusone': [
+      { t: 'graphql/dataloader', u: 'https://github.com/graphql/dataloader' },
+    ],
+    'ar-solid': [
+      { t: 'Uncle Bob - Solid relevance', u: 'https://blog.cleancoder.com/uncle-bob/2020/10/18/Solid-Relevance.html' },
+      { t: 'Dependency inversion principle', u: 'https://en.wikipedia.org/wiki/Dependency_inversion_principle' },
+      { t: 'Fowler - Inversion of control and DI', u: 'https://martinfowler.com/articles/injection.html' },
+    ],
+    'ar-transport': [
+      { t: 'What is gRPC?', u: 'https://grpc.io/docs/what-is-grpc/introduction/' },
+      { t: 'gRPC deadlines', u: 'https://grpc.io/docs/guides/deadlines/' },
+      { t: 'gRPC load balancing', u: 'https://grpc.io/blog/grpc-load-balancing/' },
+      { t: 'protobuf - do\'s and don\'ts (field numbers)', u: 'https://protobuf.dev/programming-guides/dos-donts/' },
+      { t: 'gRPC-Web basics', u: 'https://grpc.io/docs/platforms/web/basics/' },
+    ],
+    'ar-microservices': [
+      { t: 'Fowler - Microservices', u: 'https://martinfowler.com/articles/microservices.html' },
+      { t: 'Fowler - Microservice premium', u: 'https://martinfowler.com/bliki/MicroservicePremium.html' },
+    ],
+    'ar-split': [
+      { t: 'Fowler - Monolith first', u: 'https://martinfowler.com/bliki/MonolithFirst.html' },
+      { t: 'Fowler - Conway\'s law', u: 'https://martinfowler.com/bliki/ConwaysLaw.html' },
+      { t: 'Fowler - Microservice premium', u: 'https://martinfowler.com/bliki/MicroservicePremium.html' },
+    ],
   };
 })(window.PREP);
