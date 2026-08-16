@@ -13,6 +13,13 @@
   };
   KEYWORDS.jsx = KEYWORDS.js;
   KEYWORDS.ts = KEYWORDS.js + ' interface type enum implements readonly public private declare';
+  KEYWORDS.css = 'and not or only from to inherit initial unset revert important';
+
+  /* '#' opens a comment in Python, GraphQL and proto. In CSS it opens an ID
+     selector or a hex colour, and in JS a private field — so the languages
+     that do not use it must not get that alternative, or '#my-form { ... }'
+     greys out to the end of the line. */
+  var HASH = { python: 1, graphql: 1, proto: 1 };
 
   function escapeHtml(src) {
     return src.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -21,7 +28,8 @@
   function build(lang) {
     var words = (KEYWORDS[lang] || KEYWORDS.python).split(' ').join('|');
     return new RegExp(
-      '(#[^\\n]*|\\/\\/[^\\n]*|\\/\\*[\\s\\S]*?\\*\\/)' +      // 1 comment
+      '(' + (HASH[lang] ? '#[^\\n]*|' : '') +
+        '\\/\\/[^\\n]*|\\/\\*[\\s\\S]*?\\*\\/)' +               // 1 comment
         "|('(?:[^'\\\\\\n]|\\\\.)*'|\"(?:[^\"\\\\\\n]|\\\\.)*\")" + // 2 string
         '|\\b(\\d+\\.?\\d*)\\b' +                                // 3 number
         '|\\b(' + words + ')\\b' +                               // 4 keyword

@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Open edX — shipping into a Django platform you do not own</title>
-<meta name="description" content="Twelve mechanisms from openedx-platform, the Django monolith behind Open edX Studio and the LMS: extension points instead of forks, Django app plugins, events and filters, the XBlock content model and field scopes, draft and publish, block transformers, persistent grades, JWT cookies, the event bus, feature toggles, and micro-frontend migration.">
+<title>Senior Front-End — the fifteen questions, answered at depth</title>
+<meta name="description" content="The fifteen questions a 2026 senior front-end interview opens with: the compositor and the event loop, the box model and specificity, Map versus WeakMap, working with coding agents, design systems, caching at scale, and streaming transports.">
 <meta name="color-scheme" content="dark">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,13 +21,13 @@
   <div class="masthead__in">
     <a class="brand" href="#top">
       <span class="brand__dot"></span>
-      <span class="brand__name">Open edX</span>
+      <span class="brand__name">Senior Front-End</span>
       <span class="brand__meta">v1.0</span>
     </a>
 
     <a class="crosslink" href="index.html">Django &amp; React</a>
     <a class="crosslink" href="backend-architecture.html">Backend architecture</a>
-    <a class="crosslink" href="frontend-senior.html">Senior front-end</a>
+    <a class="crosslink" href="openedx.html">Open edX</a>
 
     <!-- filled from PREP.tracks -->
     <div class="seg" id="track-switch" role="tablist" aria-label="Track"></div>
@@ -47,16 +47,14 @@
 <main class="shell" id="top">
 
   <section class="hero">
-    <div class="hero__kicker"><span class="lbl">Django at platform scale · Content modelling · Safe change</span></div>
-    <h1>Add features for years, and <em>never</em> fork the platform.</h1>
+    <div class="hero__kicker"><span class="lbl">Browser internals &middot; CSS &middot; AI workflow &middot; System design</span></div>
+    <h1>The rejection is rarely &ldquo;wrong answer&rdquo;. It is <em>not senior enough</em>.</h1>
     <p class="hero__sub">
-      Anyone can say they have used Django. What an education product actually needs is
-      someone who can keep adding to a large Django codebase for years without it rotting.
-      These twelve cards are the mechanisms openedx-platform uses to make that possible &mdash;
-      how a feature installs itself, how content becomes data an author can produce without you,
-      how an expensive read is made cheap, and how a change ships to a site where somebody is
-      always mid-lesson. Each one ends with where the same idea lands on a product built from
-      scratch. Read the track, then take the quiz.
+      Fifteen questions, and almost none of them are hard to answer correctly. What separates
+      the offers is depth &mdash; naming the mechanism, then the cost, then the case where you
+      would choose differently. So each card here gives you the mechanism first, the answer
+      you would say out loud second, and the mistake that loses it at the end.
+      Read the track, then take the quiz.
     </p>
 
     <div class="stats">
@@ -89,9 +87,9 @@
   <footer class="foot">
     <span>&copy; 2026 Nuttakit Kundum</span>
     <span>
-      Mechanisms from
-      <a href="https://github.com/openedx/openedx-platform" target="_blank" rel="noopener noreferrer">openedx-platform</a>
-      &middot; every claim cited and checked against the docs and the source
+      Questions from
+      <a href="https://www.youtube.com/watch?v=AMerB8XjfZ0" target="_blank" rel="noopener noreferrer">this interview</a>
+      &middot; answers written from scratch, every claim checked against the linked docs
     </span>
   </footer>
 
@@ -99,11 +97,14 @@
 
 <script>window.PREP = {
   modules: [], quiz: [],
-  tracks: [{ v: 'openedx', l: 'Open edX' }]
+  tracks: [{ v: 'frontend-senior', l: 'Senior front-end' }]
 };</script>
 <script src="data/refs.js"></script>
-<script src="data/openedx.js"></script>
-<script src="data/quiz-openedx.js"></script>
+<script src="data/fe-runtime.js"></script>
+<script src="data/fe-css.js"></script>
+<script src="data/fe-ai.js"></script>
+<script src="data/fe-system.js"></script>
+<script src="data/quiz-frontend-senior.js"></script>
 <script src="js/highlight.js"></script>
 <script src="js/learn.js"></script>
 <script src="js/quiz.js"></script>

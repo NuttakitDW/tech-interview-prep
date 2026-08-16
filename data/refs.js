@@ -256,5 +256,81 @@
       { t: 'Available frontend plugin slots', u: 'https://docs.openedx.org/en/latest/site_ops/references/frontend-plugin-slots.html' },
       { t: 'frontend-plugin-framework', u: 'https://github.com/openedx/frontend-plugin-framework' },
     ],
+
+    /* ---------- Senior front-end track ---------- */
+    'fe-compositor': [
+      { t: 'Animation performance and frame rate', u: 'https://developer.mozilla.org/en-US/docs/Web/Performance/Guides/Animation_performance_and_frame_rate' },
+      { t: 'Animations guide (web.dev)', u: 'https://web.dev/articles/animations-guide' },
+      { t: 'will-change', u: 'https://developer.mozilla.org/en-US/docs/Web/CSS/will-change' },
+    ],
+    'fe-eventloop': [
+      { t: 'Event loop processing model (HTML spec)', u: 'https://html.spec.whatwg.org/multipage/webappapis.html#event-loop-processing-model' },
+      { t: 'Using microtasks', u: 'https://developer.mozilla.org/en-US/docs/Web/API/HTML_DOM_API/Microtask_guide' },
+      { t: 'JavaScript execution model', u: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Execution_model' },
+    ],
+    'fe-react-slow': [
+      { t: 'React memo', u: 'https://react.dev/reference/react/memo' },
+      { t: 'React useMemo', u: 'https://react.dev/reference/react/useMemo' },
+      { t: 'React Compiler', u: 'https://react.dev/learn/react-compiler' },
+    ],
+    'fe-map': [
+      { t: 'Map', u: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map' },
+      { t: 'WeakMap', u: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap' },
+    ],
+    'fe-weakmap': [
+      { t: 'WeakMap', u: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap' },
+      { t: 'Memory management', u: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Memory_management' },
+      { t: 'WeakRef', u: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakRef' },
+    ],
+    'fe-boxmodel': [
+      { t: 'The box model', u: 'https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Styling_basics/Box_model' },
+      { t: 'box-sizing', u: 'https://developer.mozilla.org/en-US/docs/Web/CSS/box-sizing' },
+      { t: 'outline - takes no space', u: 'https://developer.mozilla.org/en-US/docs/Web/CSS/outline' },
+      { t: 'Mastering margin collapsing', u: 'https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_box_model/Mastering_margin_collapsing' },
+    ],
+    'fe-specificity': [
+      { t: 'Specificity', u: 'https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_cascade/Specificity' },
+      { t: 'The cascade', u: 'https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_cascade/Cascade' },
+      { t: ':where()', u: 'https://developer.mozilla.org/en-US/docs/Web/CSS/:where' },
+      { t: 'Specificity rules (Selectors Level 4)', u: 'https://www.w3.org/TR/selectors-4/#specificity-rules' },
+    ],
+    'fe-responsive': [
+      { t: 'Responsive design', u: 'https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/CSS_layout/Responsive_Design' },
+      { t: 'Container queries', u: 'https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_containment/Container_queries' },
+      { t: 'clamp()', u: 'https://developer.mozilla.org/en-US/docs/Web/CSS/clamp' },
+    ],
+    'fe-ai-workflow': [
+      { t: 'Claude Code documentation', u: 'https://code.claude.com/docs/en/overview' },
+    ],
+    'fe-quality': [
+      { t: 'typescript-eslint', u: 'https://typescript-eslint.io/' },
+      { t: 'jscpd - copy/paste detector', u: 'https://github.com/kucherenko/jscpd' },
+      { t: 'ESLint complexity', u: 'https://eslint.org/docs/latest/rules/complexity' },
+      { t: 'ESLint max-lines', u: 'https://eslint.org/docs/latest/rules/max-lines' },
+    ],
+    'fe-testing': [
+      { t: 'The practical test pyramid', u: 'https://martinfowler.com/articles/practical-test-pyramid.html' },
+      { t: 'React Testing Library', u: 'https://testing-library.com/docs/react-testing-library/intro/' },
+      { t: 'Playwright', u: 'https://playwright.dev/' },
+    ],
+    'fe-tokens': [
+      { t: 'Claude Code documentation', u: 'https://code.claude.com/docs/en/overview' },
+    ],
+    'fe-design-system': [
+      { t: 'Custom properties', u: 'https://developer.mozilla.org/en-US/docs/Web/CSS/--*' },
+      { t: 'Radix Primitives', u: 'https://www.radix-ui.com/primitives' },
+      { t: 'Storybook', u: 'https://storybook.js.org/docs' },
+    ],
+    'fe-scale': [
+      { t: 'Cache-Control', u: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Cache-Control' },
+      { t: 'Love your cache (web.dev)', u: 'https://web.dev/articles/love-your-cache' },
+      { t: 'Vite - build options', u: 'https://vite.dev/guide/build' },
+    ],
+    'fe-realtime': [
+      { t: 'Using server-sent events', u: 'https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events' },
+      { t: 'EventSource', u: 'https://developer.mozilla.org/en-US/docs/Web/API/EventSource' },
+      { t: 'WebSockets API', u: 'https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API' },
+      { t: 'Using readable streams', u: 'https://developer.mozilla.org/en-US/docs/Web/API/Streams_API/Using_readable_streams' },
+    ],
   };
 })(window.PREP);
