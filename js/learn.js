@@ -121,12 +121,31 @@
     );
   }
 
-  function renderWatch(concept) {
-    if (concept.watch == null) return '';
+  /* The same idea for a written source: a section anchor on PREP.article,
+     or {u, l} for somewhere else entirely. */
+  function readLink(spec) {
+    var u = spec.u || (P.article && P.article.u && P.article.u + '#' + spec.at);
+    if (!u) return '';
 
-    var links = [].concat(concept.watch)
+    return (
+      '<a class="watch watch--read" href="' + u + '"' +
+      ' target="_blank" rel="noopener noreferrer">' +
+      '<span>' + (spec.l || 'Read the section') + '</span>' +
+      '</a>'
+    );
+  }
+
+  function renderWatch(concept) {
+    if (concept.watch == null && concept.read == null) return '';
+
+    var links = [].concat(concept.watch || [])
       .map(function (w) { return typeof w === 'number' ? { t: w } : w; })
       .map(watchLink)
+      .concat(
+        [].concat(concept.read || [])
+          .map(function (r) { return typeof r === 'string' ? { at: r } : r; })
+          .map(readLink)
+      )
       .join('');
 
     return links ? '<div class="watch__row">' + links + '</div>' : '';

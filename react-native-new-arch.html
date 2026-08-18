@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Interview Ground — Django &amp; React prep</title>
-<meta name="description" content="Core concepts and a scored question bank for Python/Django backend and React/React Native frontend interviews.">
+<title>React Native New Architecture — JSI, Fabric, TurboModules</title>
+<meta name="description" content="The React Native New Architecture at interview depth: why the bridge had to go, JSI, the Fabric renderer and what it breaks, TurboModules and CodeGen, the interop layer, migrating an existing app, and how to read the benchmarks honestly.">
 <meta name="color-scheme" content="dark">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,14 +21,14 @@
   <div class="masthead__in">
     <a class="brand" href="#top">
       <span class="brand__dot"></span>
-      <span class="brand__name">Interview Ground</span>
+      <span class="brand__name">RN New Architecture</span>
       <span class="brand__meta">v1.0</span>
     </a>
 
+    <a class="crosslink" href="index.html">Django &amp; React</a>
+    <a class="crosslink" href="frontend-senior.html">Senior front-end</a>
     <a class="crosslink" href="backend-architecture.html">Backend architecture</a>
     <a class="crosslink" href="openedx.html">Open edX</a>
-    <a class="crosslink" href="frontend-senior.html">Senior front-end</a>
-    <a class="crosslink" href="react-native-new-arch.html">RN New Architecture</a>
 
     <!-- filled from PREP.tracks -->
     <div class="seg" id="track-switch" role="tablist" aria-label="Track"></div>
@@ -48,12 +48,14 @@
 <main class="shell" id="top">
 
   <section class="hero">
-    <div class="hero__kicker"><span class="lbl">Python · Django · React · React Native</span></div>
-    <h1>Learn it cold, then <em>prove</em> you can recall it.</h1>
+    <div class="hero__kicker"><span class="lbl">JSI &middot; Fabric &middot; TurboModules &middot; Expo SDK 52</span></div>
+    <h1>The bridge is gone. Know <em>what</em> replaced it, and what it cost.</h1>
     <p class="hero__sub">
-      Every concept here is one an interviewer actually opens with, written the way you would
-      answer it out loud — the mechanism first, the one-line answer second, and the mistake
-      that costs people the offer at the end. Read the track, then take the quiz.
+      The New Architecture stopped being optional in React Native 0.76 and Expo SDK 52, so
+      &ldquo;we&rsquo;re on the new one&rdquo; is no longer an answer &mdash; the questions now are why the old
+      boundary failed, what breaks the day you switch, and what you can honestly promise
+      about performance. Each card gives you the mechanism first, the answer you would say
+      out loud second, and the mistake that loses it at the end.
     </p>
 
     <div class="stats">
@@ -85,25 +87,28 @@
 
   <footer class="foot">
     <span>&copy; 2026 Nuttakit Kundum</span>
-    <span>Every claim cited &middot; verified against docs and by running it</span>
+    <span>
+      Built from
+      <a href="https://www.pkgpulse.com/guides/react-native-new-architecture-fabric-turbomodules-expo-2026" target="_blank" rel="noopener noreferrer">this PkgPulse guide</a>
+      &middot; every claim re-checked against the React Native and Expo docs
+    </span>
   </footer>
 
 </main>
 
 <script>window.PREP = {
   modules: [], quiz: [],
-  tracks: [{ v: 'backend', l: 'Backend' }, { v: 'frontend', l: 'Frontend' }]
+  tracks: [{ v: 'rn-newarch', l: 'New Architecture' }],
+  /* Concepts carry a `read` anchor; the cards deep-link into the section
+     of the source guide they were built from. */
+  article: { u: 'https://www.pkgpulse.com/guides/react-native-new-architecture-fabric-turbomodules-expo-2026' }
 };</script>
 <script src="data/refs.js"></script>
-<script src="data/python.js"></script>
-<script src="data/django-core.js"></script>
-<script src="data/django-api.js"></script>
-<script src="data/react.js"></script>
-<script src="data/react-patterns.js"></script>
-<script src="data/react-native.js"></script>
-<script src="data/quiz-backend.js"></script>
-<script src="data/quiz-frontend.js"></script>
+<script src="data/rn-newarch.js"></script>
+<script src="data/rn-adopt.js"></script>
+<script src="data/quiz-rn-newarch.js"></script>
 <script src="js/highlight.js"></script>
+<script src="js/sim.js"></script>
 <script src="js/learn.js"></script>
 <script src="js/quiz.js"></script>
 <script src="js/app.js"></script>

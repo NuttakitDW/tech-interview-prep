@@ -334,5 +334,54 @@
       { t: 'WebSockets API', u: 'https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API' },
       { t: 'Using readable streams', u: 'https://developer.mozilla.org/en-US/docs/Web/API/Streams_API/Using_readable_streams' },
     ],
+
+    /* ---------- React Native New Architecture ---------- */
+    'rn-bridge': [
+      { t: 'Architecture overview', u: 'https://reactnative.dev/architecture/landing-page' },
+      { t: 'The New Architecture is here', u: 'https://reactnative.dev/blog/2024/10/23/the-new-architecture-is-here' },
+      { t: 'Architecture glossary', u: 'https://reactnative.dev/architecture/glossary' },
+    ],
+    'rn-jsi': [
+      { t: 'Architecture overview', u: 'https://reactnative.dev/architecture/landing-page' },
+      { t: 'Reanimated', u: 'https://docs.swmansion.com/react-native-reanimated/' },
+      { t: 'react-native-mmkv', u: 'https://github.com/mrousavy/react-native-mmkv' },
+    ],
+    'rn-fabric-what': [
+      { t: 'Fabric renderer', u: 'https://reactnative.dev/architecture/fabric-renderer' },
+      { t: 'React useTransition', u: 'https://react.dev/reference/react/useTransition' },
+      { t: 'Architecture glossary - shadow tree', u: 'https://reactnative.dev/architecture/glossary' },
+    ],
+    'rn-fabric-breaks': [
+      { t: 'New Architecture - measuring in useLayoutEffect', u: 'https://reactnative.dev/docs/the-new-architecture/landing-page' },
+      { t: 'Alternatives to setNativeProps in Fabric', u: 'https://github.com/reactwg/react-native-new-architecture/discussions/77' },
+      { t: 'React useLayoutEffect', u: 'https://react.dev/reference/react/useLayoutEffect' },
+    ],
+    'rn-turbomodules': [
+      { t: 'Turbo Native Modules', u: 'https://reactnative.dev/docs/turbo-native-modules-introduction' },
+    ],
+    'rn-codegen': [
+      { t: 'What is CodeGen?', u: 'https://reactnative.dev/docs/the-new-architecture/what-is-codegen' },
+      { t: 'Turbo Native Modules', u: 'https://reactnative.dev/docs/turbo-native-modules-introduction' },
+    ],
+    'rn-enable': [
+      { t: 'Expo - the New Architecture', u: 'https://docs.expo.dev/guides/new-architecture/' },
+      { t: 'The New Architecture is here', u: 'https://reactnative.dev/blog/2024/10/23/the-new-architecture-is-here' },
+    ],
+    'rn-interop': [
+      { t: 'The new renderer interop layer', u: 'https://github.com/reactwg/react-native-new-architecture/discussions/175' },
+      { t: 'Expo - the New Architecture', u: 'https://docs.expo.dev/guides/new-architecture/' },
+    ],
+    'rn-compat': [
+      { t: 'React Native Directory', u: 'https://reactnative.directory/' },
+      { t: 'Expo - the New Architecture', u: 'https://docs.expo.dev/guides/new-architecture/' },
+    ],
+    'rn-migrate': [
+      { t: 'Expo development builds', u: 'https://docs.expo.dev/develop/development-builds/introduction/' },
+      { t: 'Expo - the New Architecture', u: 'https://docs.expo.dev/guides/new-architecture/' },
+    ],
+    'rn-perf': [
+      { t: 'Source guide - benchmarks', u: 'https://www.pkgpulse.com/guides/react-native-new-architecture-fabric-turbomodules-expo-2026#performance-benchmarks' },
+      { t: 'The New Architecture is here', u: 'https://reactnative.dev/blog/2024/10/23/the-new-architecture-is-here' },
+    ],
   };
 })(window.PREP);

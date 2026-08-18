@@ -401,6 +401,9 @@
   transition: color 0.2s var(--ease), border-color 0.2s var(--ease);
 }
 
+/* a written source rather than a video — same chip, different mark */
+.watch--read::before { content: "\2197"; }
+
 .watch:hover { color: var(--pale-2); }
 
 .watch:hover time {
@@ -1440,4 +1443,14 @@ kbd {
   .seg button { padding: 0.45rem 0.7rem; font-size: 0.62rem; }
   .stats { gap: 1.5rem; }
   .setup__row > .lbl { min-width: 100%; }
+}
+
+/* Inline code is nowrap so short identifiers never break mid-token. On a
+   phone that loses to a genuinely long one — unstable_reactLegacyComponentNames
+   is 34 characters and pushes the whole page sideways. Let it break there. */
+@media (max-width: 700px) {
+  :not(pre) > code {
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
 }
